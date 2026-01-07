@@ -9,22 +9,7 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>cube practice.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>4</integer>
-		</dict>
-		<key>cube with mm.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>2</integer>
-		</dict>
-		<key>metalcpp-cube copy.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>3</integer>
-		</dict>
-		<key>metalcpp-cube.xcscheme_^#shared#^_</key>
+		<key>apple example.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
@@ -38,6 +23,11 @@
 			<true/>
 		</dict>
 		<key>3952FFD92F0BCC9200B8242A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>398F62E22F0DF152006950FE</key>
 		<dict>
 			<key>primary</key>
 			<true/>

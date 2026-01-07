@@ -12,16 +12,6 @@
 		39298E832F0D1992003F4BD1 /* MetalFX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201142F0BCD7F00B8242A /* MetalFX.framework */; };
 		39298E842F0D1992003F4BD1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201122F0BCD7A00B8242A /* QuartzCore.framework */; };
 		39298E852F0D1992003F4BD1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201102F0BCD7500B8242A /* Foundation.framework */; };
-		395201112F0BCD7500B8242A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201102F0BCD7500B8242A /* Foundation.framework */; };
-		395201132F0BCD7A00B8242A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201122F0BCD7A00B8242A /* QuartzCore.framework */; };
-		395201152F0BCD7F00B8242A /* MetalFX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201142F0BCD7F00B8242A /* MetalFX.framework */; };
-		395201172F0BCD8300B8242A /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201162F0BCD8300B8242A /* Metal.framework */; };
-		395201192F0BCDF000B8242A /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201182F0BCDF000B8242A /* libSDL3.0.dylib */; };
-		398F62E52F0DF152006950FE /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201182F0BCDF000B8242A /* libSDL3.0.dylib */; };
-		398F62E62F0DF152006950FE /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201162F0BCD8300B8242A /* Metal.framework */; };
-		398F62E72F0DF152006950FE /* MetalFX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201142F0BCD7F00B8242A /* MetalFX.framework */; };
-		398F62E82F0DF152006950FE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201122F0BCD7A00B8242A /* QuartzCore.framework */; };
-		398F62E92F0DF152006950FE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 395201102F0BCD7500B8242A /* Foundation.framework */; };
 		39EE21332F0D535F0064F761 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39EE21322F0D535F0064F761 /* MetalKit.framework */; };
 		39EE21352F0D53670064F761 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39EE21342F0D53670064F761 /* Cocoa.framework */; };
 		39EE21372F0D536C0064F761 /* ModelIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39EE21362F0D536C0064F761 /* ModelIO.framework */; };
@@ -34,36 +24,11 @@
 		395201142F0BCD7F00B8242A /* MetalFX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalFX.framework; path = System/Library/Frameworks/MetalFX.framework; sourceTree = SDKROOT; };
 		395201162F0BCD8300B8242A /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		395201182F0BCDF000B8242A /* libSDL3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3/3.2.28/lib/libSDL3.0.dylib; sourceTree = "<group>"; };
-		3952FFDA2F0BCC9200B8242A /* metalcpp-cube.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "metalcpp-cube.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		398F62EE2F0DF152006950FE /* cube practice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "cube practice.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		39C1ECA32F0BB2D40021EF5B /* apple example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "apple example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		39EE21322F0D535F0064F761 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		39EE21342F0D53670064F761 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		39EE21362F0D536C0064F761 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		39A000C42F0E2FBF0067EFAB /* Exceptions for "Paloma Engine" folder in "metalcpp-cube" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Libs/metal-cpp/AAPLMathUtilities.cpp",
-				"Libs/metal-cpp/LICENSE.txt",
-				"Libs/metal-cpp/README.md",
-				"Libs/metal-cpp/SingleHeader/MakeSingleHeader.py",
-			);
-			target = 3952FFD92F0BCC9200B8242A /* metalcpp-cube */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		39A000C52F0E2FBF0067EFAB /* Exceptions for "Paloma Engine" folder in "Compile Sources" phase from "metalcpp-cube" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 3952FFD62F0BCC9200B8242A /* Sources */;
-			membershipExceptions = (
-				"Libs/metal-cpp/AAPLMathUtilities.h",
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		39A000192F0E2E250067EFAB /* Apple Code */ = {
@@ -73,10 +38,6 @@
 		};
 		39C1ECA52F0BB2D40021EF5B /* Paloma Engine */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				39A000C42F0E2FBF0067EFAB /* Exceptions for "Paloma Engine" folder in "metalcpp-cube" target */,
-				39A000C52F0E2FBF0067EFAB /* Exceptions for "Paloma Engine" folder in "Compile Sources" phase from "metalcpp-cube" target */,
-			);
 			path = "Paloma Engine";
 			sourceTree = "<group>";
 		};
@@ -95,30 +56,6 @@
 				39298E832F0D1992003F4BD1 /* MetalFX.framework in Frameworks */,
 				39298E842F0D1992003F4BD1 /* QuartzCore.framework in Frameworks */,
 				39298E852F0D1992003F4BD1 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3952FFD72F0BCC9200B8242A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				395201192F0BCDF000B8242A /* libSDL3.0.dylib in Frameworks */,
-				395201172F0BCD8300B8242A /* Metal.framework in Frameworks */,
-				395201152F0BCD7F00B8242A /* MetalFX.framework in Frameworks */,
-				395201132F0BCD7A00B8242A /* QuartzCore.framework in Frameworks */,
-				395201112F0BCD7500B8242A /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		398F62E42F0DF152006950FE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				398F62E52F0DF152006950FE /* libSDL3.0.dylib in Frameworks */,
-				398F62E62F0DF152006950FE /* Metal.framework in Frameworks */,
-				398F62E72F0DF152006950FE /* MetalFX.framework in Frameworks */,
-				398F62E82F0DF152006950FE /* QuartzCore.framework in Frameworks */,
-				398F62E92F0DF152006950FE /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,9 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				39C1ECA32F0BB2D40021EF5B /* apple example.app */,
-				3952FFDA2F0BCC9200B8242A /* metalcpp-cube.app */,
 				39298E8A2F0D1992003F4BD1 /* Paloma Engine.app */,
-				398F62EE2F0DF152006950FE /* cube practice.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -191,44 +126,6 @@
 			);
 			productName = "metalcpp-cube";
 			productReference = 39298E8A2F0D1992003F4BD1 /* Paloma Engine.app */;
-			productType = "com.apple.product-type.application";
-		};
-		3952FFD92F0BCC9200B8242A /* metalcpp-cube */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3952FFE42F0BCC9300B8242A /* Build configuration list for PBXNativeTarget "metalcpp-cube" */;
-			buildPhases = (
-				3952FFD62F0BCC9200B8242A /* Sources */,
-				3952FFD72F0BCC9200B8242A /* Frameworks */,
-				3952FFD82F0BCC9200B8242A /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "metalcpp-cube";
-			packageProductDependencies = (
-			);
-			productName = "metalcpp-cube";
-			productReference = 3952FFDA2F0BCC9200B8242A /* metalcpp-cube.app */;
-			productType = "com.apple.product-type.application";
-		};
-		398F62E22F0DF152006950FE /* cube practice */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 398F62EB2F0DF152006950FE /* Build configuration list for PBXNativeTarget "cube practice" */;
-			buildPhases = (
-				398F62E32F0DF152006950FE /* Sources */,
-				398F62E42F0DF152006950FE /* Frameworks */,
-				398F62EA2F0DF152006950FE /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "cube practice";
-			packageProductDependencies = (
-			);
-			productName = "metalcpp-cube";
-			productReference = 398F62EE2F0DF152006950FE /* cube practice.app */;
 			productType = "com.apple.product-type.application";
 		};
 		39C1ECA22F0BB2D40021EF5B /* apple example */ = {
@@ -263,9 +160,6 @@
 				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
-					3952FFD92F0BCC9200B8242A = {
-						CreatedOnToolsVersion = 26.1.1;
-					};
 					39C1ECA22F0BB2D40021EF5B = {
 						CreatedOnToolsVersion = 26.1.1;
 					};
@@ -286,29 +180,13 @@
 			projectRoot = "";
 			targets = (
 				39C1ECA22F0BB2D40021EF5B /* apple example */,
-				3952FFD92F0BCC9200B8242A /* metalcpp-cube */,
 				39298E7E2F0D1992003F4BD1 /* Paloma Engine */,
-				398F62E22F0DF152006950FE /* cube practice */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		39298E862F0D1992003F4BD1 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3952FFD82F0BCC9200B8242A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		398F62EA2F0DF152006950FE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -326,20 +204,6 @@
 
 /* Begin PBXSourcesBuildPhase section */
 		39298E7F2F0D1992003F4BD1 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3952FFD62F0BCC9200B8242A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		398F62E32F0DF152006950FE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -373,6 +237,7 @@
 				GCC_C_LANGUAGE_STANDARD = c23;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -417,6 +282,7 @@
 				GCC_C_LANGUAGE_STANDARD = c23;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -438,180 +304,6 @@
 				SWIFT_VERSION = 5.0;
 				SYSTEM_HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/Paloma Engine/Libs/metal-cpp\"",
-					/opt/homebrew/include/,
-				);
-			};
-			name = Release;
-		};
-		3952FFE22F0BCC9300B8242A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++23";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W7FUQB4L6D;
-				ENABLE_APP_SANDBOX = NO;
-				ENABLE_HARDENED_RUNTIME = NO;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
-				GCC_C_LANGUAGE_STANDARD = c23;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/homebrew/Cellar/sdl3/3.2.28/lib,
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "skbid.metalcpp-cube";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				SYSTEM_HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/metal-cpp/",
-					/opt/homebrew/include/,
-				);
-			};
-			name = Debug;
-		};
-		3952FFE32F0BCC9300B8242A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++23";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W7FUQB4L6D;
-				ENABLE_APP_SANDBOX = NO;
-				ENABLE_HARDENED_RUNTIME = NO;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
-				GCC_C_LANGUAGE_STANDARD = c23;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/homebrew/Cellar/sdl3/3.2.28/lib,
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "skbid.metalcpp-cube";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				SYSTEM_HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/metal-cpp/",
-					/opt/homebrew/include/,
-				);
-			};
-			name = Release;
-		};
-		398F62EC2F0DF152006950FE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++23";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W7FUQB4L6D;
-				ENABLE_APP_SANDBOX = NO;
-				ENABLE_HARDENED_RUNTIME = NO;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
-				GCC_C_LANGUAGE_STANDARD = c23;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/homebrew/Cellar/sdl3/3.2.28/lib,
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "skbid.metalcpp-cube";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				SYSTEM_HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/metal-cpp/",
-					/opt/homebrew/include/,
-				);
-			};
-			name = Debug;
-		};
-		398F62ED2F0DF152006950FE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++23";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = W7FUQB4L6D;
-				ENABLE_APP_SANDBOX = NO;
-				ENABLE_HARDENED_RUNTIME = NO;
-				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
-				GCC_C_LANGUAGE_STANDARD = c23;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/homebrew/Cellar/sdl3/3.2.28/lib,
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "skbid.metalcpp-cube";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				REGISTER_APP_GROUPS = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				SYSTEM_HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/metal-cpp/",
 					/opt/homebrew/include/,
 				);
 			};
@@ -804,24 +496,6 @@
 			buildConfigurations = (
 				39298E882F0D1992003F4BD1 /* Debug */,
 				39298E892F0D1992003F4BD1 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3952FFE42F0BCC9300B8242A /* Build configuration list for PBXNativeTarget "metalcpp-cube" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3952FFE22F0BCC9300B8242A /* Debug */,
-				3952FFE32F0BCC9300B8242A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		398F62EB2F0DF152006950FE /* Build configuration list for PBXNativeTarget "cube practice" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				398F62EC2F0DF152006950FE /* Debug */,
-				398F62ED2F0DF152006950FE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

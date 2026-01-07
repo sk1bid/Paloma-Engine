@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "39C1ECA22F0BB2D40021EF5B"
-               BuildableName = "apple example.app"
-               BlueprintName = "apple example"
+               BlueprintIdentifier = "39298E7E2F0D1992003F4BD1"
+               BuildableName = "Paloma Engine.app"
+               BlueprintName = "Paloma Engine"
                ReferencedContainer = "container:Paloma Engine.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "39C1ECA22F0BB2D40021EF5B"
-            BuildableName = "apple example.app"
-            BlueprintName = "apple example"
+            BlueprintIdentifier = "39298E7E2F0D1992003F4BD1"
+            BuildableName = "Paloma Engine.app"
+            BlueprintName = "Paloma Engine"
             ReferencedContainer = "container:Paloma Engine.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,9 +62,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "39C1ECA22F0BB2D40021EF5B"
-            BuildableName = "apple example.app"
-            BlueprintName = "apple example"
+            BlueprintIdentifier = "39298E7E2F0D1992003F4BD1"
+            BuildableName = "Paloma Engine.app"
+            BlueprintName = "Paloma Engine"
             ReferencedContainer = "container:Paloma Engine.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
