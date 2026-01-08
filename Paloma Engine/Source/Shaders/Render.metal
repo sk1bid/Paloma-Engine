@@ -31,50 +31,30 @@ struct VertexOut {
 
 // -- Vertex Shader --
 vertex VertexOut vertexMain(
-    VertexIn in [[stage_in]],
-    constant FrameUniforms& uniforms [[buffer(BufferIndexUniforms)]]
-) {
+                            VertexIn in [[stage_in]],
+                            constant FrameUniforms& uniforms [[buffer(BufferIndexUniforms)]],
+                            constant InstanceData& instanceData [[buffer(BufferIndexInstanceData)]]
+                            )
+{
     VertexOut out;
     
-    float angleY = uniforms.time;
-    float angleX = uniforms.time * 0.5;
+    // Transform vertex position using model matrix
+    /// Transfer object from local space (0,0,0) to World position
+    float4 worldPos = instanceData.modelMatrix * float4(in.position, 1.0);
     
-    // Rotation around Y axis
-    float cosY = cos(angleY);
-    float sinY = sin(angleY);
+    // Normal direction (perpendicular to surface)
+    /// Normals shoud rotate with object for correct lighting
+    float3 worldNormal = (instanceData.normalMatrix * float4(in.normal, 0.0)).xyz;
     
-    float3 pos1;
-    pos1.x = in.position.x * cosY + in.position.z * sinY;
-    pos1.y = in.position.y;
-    pos1.z = -in.position.x * sinY + in.position.z * cosY;
-    
-    // Rotation around X axis
-    float cosX = cos(angleX);
-    float sinX = sin(angleX);
-    
-    float3 rotatedPos;
-    rotatedPos.x = pos1.x;
-    rotatedPos.y = pos1.y * cosX - pos1.z * sinX;
-    rotatedPos.z = pos1.y * sinX + pos1.z * cosX;
-    
-    float3 norm1;
-    norm1.x = in.normal.x * cosY + in.normal.z * sinY;
-    norm1.y = in.normal.y;
-    norm1.z = -in.normal.x * sinY + in.normal.z * cosY;
-    
-    float3 rotatedNormal;
-    rotatedNormal.x = norm1.x;
-    rotatedNormal.y = norm1.y * cosX - norm1.z * sinX;
-    rotatedNormal.z = norm1.y * sinX + norm1.z * cosX;
-    
-    float4 worldPos = float4(rotatedPos, 1.0);
+    // Transform to clip space: Projection * View * World
     out.position = uniforms.projectionMatrix * uniforms.viewMatrix * worldPos;
     
     out.worldPos = worldPos.xyz;
-    out.normal = rotatedNormal;
+    out.normal = normalize(worldNormal);
     out.texcoord = in.texcoord;
     
     return out;
+    
 }
 
 // -- Fragment Shader (debug) --
