@@ -17,6 +17,13 @@ enum BufferIndex {
     BufferIndexInstanceData = 2,  // Instance transforms
 };
 
+// -- texture indices for argument table --
+enum TextureIndex {
+    TextureIndexColor = 0, // albedo/diffuse color map
+    TextureIndexNormal = 1, // Normal map
+    TextureIndexMetallic = 2, // Metallic/Roughness map
+};
+
 // -- Vertex attributes (vertex arreibutes) --
 enum VertexAttribute {
     VertexAttributePosition = 0,

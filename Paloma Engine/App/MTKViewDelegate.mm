@@ -24,6 +24,7 @@
     MTL::DepthStencilState *_depthState;
     MTL::Buffer *_uniformBuffers[Paloma::MaxFramesInFlight];
     MTL::Buffer *_instanceBuffers[Paloma::MaxFramesInFlight];
+    MTL::Texture* _albedoTexture;
     bool _resourcesLoaded;
     
     // ObjC frame objects - stored as ivars to prevent ARC optimization issues
@@ -66,7 +67,7 @@
             _instanceBuffers[i] = _context->device()->newBuffer(sizeof(InstanceData),
                                                                 MTL::ResourceStorageModeShared);
             _instanceBuffers[i]->setLabel(
-                 NS::String::string("InstanceDataBuffer", NS::UTF8StringEncoding));
+                                          NS::String::string("InstanceDataBuffer", NS::UTF8StringEncoding));
         }
         
         auto depthDesc = MTL::DepthStencilDescriptor::alloc()->init();
@@ -79,11 +80,20 @@
         }
         
         // Load test primitive
-        Paloma::Mesh *testMesh = _assetManager.getPrimitive("box");
+        Paloma::Mesh *testMesh = _assetManager.getPrimitive("sphere");
         if (!testMesh) {
             NSLog(@"Failed to load test mesh");
         } else {
             NSLog(@"Test mesh loaded");
+        }
+        
+        // -- Load Texture --
+        NSURL* resourceURL = [[NSBundle mainBundle] resourceURL];
+        NSString* texturePath = [[resourceURL path] stringByAppendingPathComponent:@"Fabric080_2K-PNG_Color.png"];
+        
+        _albedoTexture = _assetManager.getTexture([texturePath UTF8String], true);
+        if (_albedoTexture){
+            NSLog(@"Texture loaded: %@", texturePath);
         }
         
         MTL::ResidencySet *residency = _context->residencySet();
@@ -159,7 +169,7 @@
     float aspect = size.width / size.height;
     
     // View Matrix
-    simd_float3 eye = {0.0f, 0.0f, 3.0f};
+    simd_float3 eye = {0.0f, 0.0f, 1.0f};
     simd_float3 target = {0.0f, 0.0f, 0.0f};
     simd_float3 up = {0.0f, 1.0f, 0.0f};
     simd_float4x4 viewMatrix = matrix_look_at_right_hand(eye, target, up);
@@ -225,7 +235,11 @@
     
     // -- Draw mesh --
     if (_resourcesLoaded) {
-        Paloma::Mesh *mesh = _assetManager.getPrimitive("box");
+        Paloma::Mesh *mesh = _assetManager.getPrimitive("sphere");
+        
+        // link texture to argTable
+        argTable->setTexture(_albedoTexture->gpuResourceID(), TextureIndexColor);
+        
         if (mesh) {
             argTable->setAddress(mesh->vertexAddress(), BufferIndexVertices);
             for (const auto &submesh : mesh->submeshes()) {

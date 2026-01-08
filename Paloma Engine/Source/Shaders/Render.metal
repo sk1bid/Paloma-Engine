@@ -9,6 +9,8 @@
 #include <simd/simd.h>
 using namespace metal;
 
+// -- Texture Sampler --
+constexpr sampler textureSampler(filter::linear, mip_filter::linear, address::repeat);
 
 #include "ShaderTypes.h"
 
@@ -59,9 +61,17 @@ vertex VertexOut vertexMain(
 
 // -- Fragment Shader (debug) --
 fragment float4 fragmentMain (
-                              VertexOut in [[stage_in]]
+                              VertexOut in [[stage_in]],
+                              texture2d<float> albedoTexture [[texture(TextureIndexColor)]]
                               )
 {
-    float3 color = in.normal * 0.5 + 0.5;
-    return float4(color, 1.0);
+    // Sample texture at UV coords
+    float4 texColor = albedoTexture.sample(textureSampler, in.texcoord);
+    
+    // simple lighting
+    float3 lightDir = normalize(float3(1.0, 1.0, 1.0));
+    float NdotL = max(dot(normalize(in.normal), lightDir), 0.0);
+    float3 diffuse = texColor.rgb * (0.3 + 0.7 * NdotL);  // ambient + diffuse
+    
+    return float4(diffuse, texColor.a);
 }
