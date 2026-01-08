@@ -1,0 +1,55 @@
+//
+//  ShaderTypes.h
+//  Paloma Engine
+//
+//  Created by Artem on 07.01.2026.
+//
+
+#ifndef ShaderTypes_h
+#define ShaderTypes_h
+
+#include <simd/simd.h>
+
+// -- buffer indices for argument table --
+enum BufferIndex {
+  BufferIndexUniforms = 0,  // frame uniforms
+  BufferIndexVertices = 1,  // vertex data
+  BufferIndexInstances = 2, // Instance transforms
+};
+
+// -- texture indices (slots for textures) --
+enum TextureIndex {
+  TextureIndexAlbedo = 0,   // Albedo/Color map
+  TextureIndexNormal = 1,   // Normal map
+  TextureIndexMetallic = 2, // Metallic/Roughness map
+};
+
+// -- Vertex attributes (vertex arreibutes) --
+enum VertexAttribute {
+  VertexAttributePosition = 0,
+  VertexAttributeNormal = 1,
+  VertexAttributeTexcoord = 2,
+};
+
+// -- Frame uniforms for every frame --
+struct FrameUniforms {
+  simd_float4x4 viewMatrix;       // Camera
+  simd_float4x4 projectionMatrix; // Projection
+  simd_float3 cameraPosition;
+  float time; // for animation
+};
+
+// -- instance data --
+struct InstanceData {
+  simd_float4x4 modelMatrix; // world transform
+  simd_float4x4 normalMatrix;
+};
+
+// -- Vertex for procedural mesh ---
+struct Vertex {
+  simd_float3 position;
+  simd_float3 normal;
+  simd_float2 texcoord;
+};
+
+#endif

@@ -1,0 +1,50 @@
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Xcode
+build/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Xcode playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Archives
+*.xcarchive
+
+# CocoaPods
+Pods/
+
+# Dependencies
+Carthage/Build/
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# Metal compiled shaders
+*.metallib
+*.air
+
+# Temporary files
+*.log
+*.tmp
+
+# User-specific files
+*.user
+
+# Build outputs
+*.o
+*.a
+*.dylib

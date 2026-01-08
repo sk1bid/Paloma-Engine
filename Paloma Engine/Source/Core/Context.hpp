@@ -49,7 +49,8 @@ public:
     // -- Init --
     
     /// init all Metal4 objects
-    bool init();
+    /// @param device - existing Metal device from MTKView
+    bool init(MTL::Device* device);
     
     /// Release all resources
     void shutdown();
