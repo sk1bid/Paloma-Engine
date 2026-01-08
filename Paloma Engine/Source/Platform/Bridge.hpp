@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cstdint>
+#include <iostream>
 
 namespace MTL {
 class ResidencySet;
@@ -52,4 +53,11 @@ void waitForEvent(MTL::SharedEvent* event, uint64_t value, uint64_t timeoutMS);
 /// @param outWidth - output width
 /// @param outHeight - output height
 void getViewSize(void* mtkView, uint32_t* outWidth, uint32_t* outHeight);
+
+/// Get absolute path to bundle resource
+/// @param name Resource name without extension
+/// @param ext File extension (e.g. "png")
+/// @param directory Subdirectory in bundle (e.g. "Textures")
+/// @return Absolute path or empty string if not found
+std::string getBundleResourcePath(const char* name, const char* ext, const char* directory = nullptr);
 }

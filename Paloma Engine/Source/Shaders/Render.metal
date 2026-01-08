@@ -35,18 +35,20 @@ struct VertexOut {
 vertex VertexOut vertexMain(
                             VertexIn in [[stage_in]],
                             constant FrameUniforms& uniforms [[buffer(BufferIndexUniforms)]],
-                            constant InstanceData& instanceData [[buffer(BufferIndexInstanceData)]]
+                            constant InstanceData* instances[[buffer(BufferIndexInstanceData)]],
+                            uint instanceID [[instance_id]]
                             )
 {
     VertexOut out;
     
+    InstanceData inst = instances[instanceID];
     // Transform vertex position using model matrix
     /// Transfer object from local space (0,0,0) to World position
-    float4 worldPos = instanceData.modelMatrix * float4(in.position, 1.0);
+    float4 worldPos = inst.modelMatrix * float4(in.position, 1.0);
     
     // Normal direction (perpendicular to surface)
     /// Normals shoud rotate with object for correct lighting
-    float3 worldNormal = (instanceData.normalMatrix * float4(in.normal, 0.0)).xyz;
+    float3 worldNormal = (inst.normalMatrix * float4(in.normal, 0.0)).xyz;
     
     // Transform to clip space: Projection * View * World
     out.position = uniforms.projectionMatrix * uniforms.viewMatrix * worldPos;

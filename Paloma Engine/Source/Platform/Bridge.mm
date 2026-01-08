@@ -13,6 +13,8 @@
 #import <Metal/Metal.h>
 #import <MetalKit/MetalKit.h>
 #import <QuartzCore/QuartzCore.h>
+#include "Bridge.hpp"
+#import <Foundation/Foundation.h>
 
 namespace Bridge {
 
@@ -56,6 +58,22 @@ void getViewSize(void *mtkView, uint32_t *outWidth, uint32_t *outHeight) {
   CGSize size = view.drawableSize;
   *outWidth = (uint32_t)size.width;
   *outHeight = (uint32_t)size.height;
+}
+
+std::string getBundleResourcePath(const char* name, const char* ext, const char* directory) {
+    @autoreleasepool {
+        NSString* nsName = [NSString stringWithUTF8String:name];
+        NSString* nsExt = [NSString stringWithUTF8String:ext];
+        NSString* nsDir = directory ? [NSString stringWithUTF8String:directory] : nil;
+        
+        NSString* path = [[NSBundle mainBundle] pathForResource:nsName
+                                                         ofType:nsExt
+                                                    inDirectory:nsDir];
+        if (path) {
+            return std::string([path UTF8String]);
+        }
+        return "";
+    }
 }
 
 } // namespace Bridge

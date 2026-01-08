@@ -24,7 +24,6 @@
 		395201142F0BCD7F00B8242A /* MetalFX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalFX.framework; path = System/Library/Frameworks/MetalFX.framework; sourceTree = SDKROOT; };
 		395201162F0BCD8300B8242A /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		395201182F0BCDF000B8242A /* libSDL3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3/3.2.28/lib/libSDL3.0.dylib; sourceTree = "<group>"; };
-		395DD9212F0EB2F5007966A9 /* PipelineCache.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PipelineCache.cpp; sourceTree = "<group>"; };
 		39C1ECA32F0BB2D40021EF5B /* apple example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "apple example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		39EE21322F0D535F0064F761 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		39EE21342F0D53670064F761 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -88,7 +87,6 @@
 		39C1EC9A2F0BB2D40021EF5B = {
 			isa = PBXGroup;
 			children = (
-				395DD9212F0EB2F5007966A9 /* PipelineCache.cpp */,
 				39C1ECA52F0BB2D40021EF5B /* Paloma Engine */,
 				3952010F2F0BCD7500B8242A /* Frameworks */,
 				39C1ECA42F0BB2D40021EF5B /* Products */,
