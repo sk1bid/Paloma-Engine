@@ -31,6 +31,16 @@
 		39EE21362F0D536C0064F761 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		398B609B2F0F80B100842DC8 /* Exceptions for "Paloma Engine" folder in "Paloma Engine" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Paloma-Engine-Info.plist",
+			);
+			target = 39298E7E2F0D1992003F4BD1 /* Paloma Engine */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		39A000192F0E2E250067EFAB /* Apple Code */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -39,6 +49,9 @@
 		};
 		39C1ECA52F0BB2D40021EF5B /* Paloma Engine */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				398B609B2F0F80B100842DC8 /* Exceptions for "Paloma Engine" folder in "Paloma Engine" target */,
+			);
 			path = "Paloma Engine";
 			sourceTree = "<group>";
 		};
@@ -238,6 +251,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GCC_C_LANGUAGE_STANDARD = c23;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Paloma-Engine-Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -282,7 +296,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GCC_C_LANGUAGE_STANDARD = c23;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Paloma-Engine-Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				LD_RUNPATH_SEARCH_PATHS = (

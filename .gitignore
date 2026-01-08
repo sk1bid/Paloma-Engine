@@ -48,3 +48,6 @@ Carthage/Build/
 *.o
 *.a
 *.dylib
+
+Apple_Metal_Examples/
+
