@@ -17,9 +17,9 @@ constexpr sampler textureSampler(filter::linear, mip_filter::linear, address::re
 // -- Transfer Data Structures --
 
 struct VertexIn {
-    float3 position [[attribute(VertexAttributePosition)]];
-    float3 normal [[attribute(VertexAttributeNormal)]];
-    float2 texcoord [[attribute(VertexAttributeTexcoord)]];
+    packed_float3 position;
+    packed_float3 normal;
+    float2 texcoord;
     
 };
 
@@ -33,29 +33,34 @@ struct VertexOut {
 
 // -- Vertex Shader --
 vertex VertexOut vertexMain(
-                            VertexIn in [[stage_in]],
+                            device const VertexIn* vertices [[buffer(BufferIndexVertices)]],
                             constant FrameUniforms& uniforms [[buffer(BufferIndexUniforms)]],
                             constant InstanceData* instances[[buffer(BufferIndexInstanceData)]],
+                            uint vid [[vertex_id]],
                             uint instanceID [[instance_id]]
                             )
 {
     VertexOut out;
+    VertexIn in_packed = vertices[vid];
+    
+    float3 position = float3(in_packed.position);
+    float3 normal = float3(in_packed.normal);
     
     InstanceData inst = instances[instanceID];
     // Transform vertex position using model matrix
     /// Transfer object from local space (0,0,0) to World position
-    float4 worldPos = inst.modelMatrix * float4(in.position, 1.0);
+    float4 worldPos = inst.modelMatrix * float4(position, 1.0);
     
     // Normal direction (perpendicular to surface)
     /// Normals shoud rotate with object for correct lighting
-    float3 worldNormal = (inst.normalMatrix * float4(in.normal, 0.0)).xyz;
+    float3 worldNormal = (inst.normalMatrix * float4(position, 0.0)).xyz;
     
     // Transform to clip space: Projection * View * World
     out.position = uniforms.projectionMatrix * uniforms.viewMatrix * worldPos;
     
     out.worldPos = worldPos.xyz;
     out.normal = normalize(worldNormal);
-    out.texcoord = in.texcoord;
+    out.texcoord = in_packed.texcoord;
     
     return out;
     
