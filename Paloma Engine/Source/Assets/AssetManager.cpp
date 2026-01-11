@@ -13,8 +13,12 @@ namespace Paloma {
 
 // -- Init / shutdown --
 
-void AssetManager::init(MTL::Device *device){
+void AssetManager::init(MTL::Device *device, MTL4::ArgumentTable *argTable){
     _device = device;
+    _argTable = argTable;
+    _nextTextureIndex = 0;
+    
+    _materialBuffer = _device->newBuffer(MaterialBufferSize, MTL::ResourceStorageModeShared);
 }
 
 void AssetManager::shutdown(){
@@ -25,12 +29,13 @@ void AssetManager::shutdown(){
     _meshes.clear();
     
     // Clear all textures
-    for (auto& [path, texture] : _textures){
-        if (texture){
-            texture->release();
+    for (auto& [path, resource] : _textures){
+        if (resource.texture){
+            resource.texture->release();
         }
     }
     _textures.clear();
+    _materialBuffer->release();
     
     _device = nullptr;
 }
@@ -71,7 +76,7 @@ Mesh* AssetManager::getPrimitive(const char* name) {
 
 // -- Textures --
 
-MTL::Texture* AssetManager::getTexture(const char* path, bool sRGB) {
+TextureResource AssetManager::getTexture(const char* path, bool sRGB) {
     auto it = _textures.find(path);
     /// cache hit
     if (it!=_textures.end()){
@@ -80,12 +85,17 @@ MTL::Texture* AssetManager::getTexture(const char* path, bool sRGB) {
     
     MTL::Texture* texture = TextureLoader::loadFromFile(_device, path, sRGB);
     if (texture) {
-        _textures[path] = texture;
+        uint32_t index = _nextTextureIndex++;
+        TextureResource res = { texture, index };
+        _textures[path] = { texture, index };
+        
+        _argTable->setTexture(texture->gpuResourceID(), index);
+        return res;
     }
-    return texture;
+    return {nullptr, 0};
 }
 
-MTL::Texture* AssetManager::getBundleTexture(const char* name, bool sRGB) {
+TextureResource AssetManager::getBundleTexture(const char* name, bool sRGB) {
     std::string key = std::string("bundle:") + name;
     
     auto it = _textures.find(key);
@@ -93,11 +103,48 @@ MTL::Texture* AssetManager::getBundleTexture(const char* name, bool sRGB) {
         return it->second;
     }
     
-    MTL::Texture* texture = TextureLoader::loadFromBundle(_device, name, sRGB);
+    MTL::Texture* texture = TextureLoader::loadFromFile(_device, name, sRGB);
     if (texture) {
-        _textures[key] = texture;
+        uint32_t index = _nextTextureIndex++;
+        TextureResource res = { texture, index };
+        _textures[key] = { texture, index };
+        
+        _argTable->setTexture(texture->gpuResourceID(), index);
+        return res;
     }
-    return texture;
+    return {nullptr, 0};
+}
+
+
+uint32_t AssetManager::getTextureIndex(const char* path) {
+    auto it = _textures.find(path);
+    if (it != _textures.end()) {
+        return it->second.bindlessIndex;
+    }
+    return 0;
+}
+
+// -- Materials --
+
+uint64_t AssetManager::createMaterial(const std::string& name, const MaterialArguments& args){
+    if (_materialCounter + 1 > MaxMaterials) return 0;
+    
+    auto im = _materialOffsets.find(name);
+    if (im != _materialOffsets.end()) {
+        return im->second;
+    }
+    
+    uint64_t offset = _materialCounter * sizeof(MaterialArguments);
+    
+    void* dataPtr = (uint8_t*)_materialBuffer->contents() + offset;
+    memcpy(dataPtr, &args, sizeof(MaterialArguments));
+    
+    _materialOffsets[name] = offset;
+    
+    uint64_t gpuAddr = _materialBuffer->gpuAddress() + offset;
+    
+    _materialCounter++;
+    return gpuAddr;
 }
 
 // -- residency set --
@@ -112,11 +159,13 @@ void AssetManager::registerWithResidencySet(MTL::ResidencySet *residencySet){
     }
     
     /// add all textures
-    for (auto& [path, texture] : _textures){
-        if (texture){
-            residencySet->addAllocation(texture);
+    for (auto& [path, resource] : _textures){
+        if (resource.texture){
+            residencySet->addAllocation(resource.texture);
         }
     }
+    
+    residencySet->addAllocation(_materialBuffer);
     
     residencySet->commit();
 }

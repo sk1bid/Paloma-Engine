@@ -6,61 +6,83 @@
 //
 
 #include "SpheresScene.hpp"
-#include "Renderer.hpp"
 #include "AAPLMathUtilities.h"
 #include "Bridge.hpp"
+#include "Components.hpp"
+#include "Renderer.hpp"
 
 namespace Paloma {
 
-SpheresScene::~SpheresScene() {
-    cleanup();
-}
+SpheresScene::~SpheresScene() { cleanup(); }
 
-void SpheresScene::cleanup(){
-    for (uint32_t i = 0; i < MaxFramesInFlight; i++){
-        if (_instanceBuffers[i]){
+void SpheresScene::cleanup() {
+    for (uint32_t i = 0; i < MaxFramesInFlight; i++) {
+        if (_instanceBuffers[i]) {
             _instanceBuffers[i]->release();
             _instanceBuffers[i] = nullptr;
         }
     }
     
     _sphereMesh = nullptr;
-    _texture = nullptr;
 }
 
 // -- Setup Scene (once) --
-void SpheresScene::setup(Renderer* renderer){
-    auto device = renderer->context()->device();
-    auto assetManager = renderer->assetManager();
+void SpheresScene::setup(Renderer *renderer) {
+    _renderer = renderer;
+    auto device = _renderer->context()->device();
+    auto assetManager = _renderer->assetManager();
+    
+    MaterialArguments fabricMat = {};
+    MaterialArguments onyxMat = {};
+    
     
     // Load sphere mesh
     _sphereMesh = assetManager->getPrimitive("sphere");
     
     // Load texture
-    std::string texPath = Bridge::getBundleResourcePath(
-                                                        "storage-container2-albedo", "png"
-                                                        );
-    if (texPath.empty()) {
-        printf("ERROR: Texture not found in bundle!\n");
-    }else if (!texPath.empty()) {
-        _texture = assetManager->getTexture(texPath.c_str(), true);
-    }
+    std::string texPathBox =
+    Bridge::getBundleResourcePath("Onyx011_2K-PNG_Color", "png");
+    std::string texPathFabric =
+    Bridge::getBundleResourcePath("Fabric080_2K-PNG_Color", "png");
     
-    if (_texture == nullptr) {
-        printf("WARNING: No texture bound!\n");
-        return;
-    }
+    auto textureOnyx = assetManager->getTexture(texPathBox.c_str(), true);
+    auto textureFabric = assetManager->getTexture(texPathFabric.c_str(), true);
     
+    fabricMat.baseColorTexture = textureFabric.texture->gpuResourceID();
+    
+    onyxMat.baseColorTexture = textureOnyx.texture->gpuResourceID();
+    
+    _onyxMatAddress = assetManager->createMaterial("Onyx", onyxMat);
+    _fabricMatAddress = assetManager->createMaterial("Fabric", fabricMat);
+    
+    
+    
+    for (int i = 0; i < kInstanceCount; i++) {
+        auto entity = _registry.create();
+        
+        float x = (i - 2) * 1.5f;
+        _registry.emplace<TransformComponent>(entity, vector_float3{x, 0, 0}, // pos
+                                              vector_float3{0, 0, 0},         // rot
+                                              vector_float3{1, 1, 1} // scale
+                                              );
+        
+        
+        _registry.emplace<MeshComponent>(entity,
+                                         _sphereMesh,
+                                         _fabricMatAddress);
+        
+        
+    }
     
     // Create instance buffers
-    for (uint32_t i = 0; i < MaxFramesInFlight; i++){
-        _instanceBuffers[i] = device->newBuffer(sizeof(InstanceData) * kInstanceCount,
-                                                MTL::ResourceStorageModeShared);
+    for (uint32_t i = 0; i < MaxFramesInFlight; i++) {
+        _instanceBuffers[i] = device->newBuffer(
+                                                sizeof(InstanceData) * kInstanceCount, MTL::ResourceStorageModeShared);
     }
     
     // Register in residency
     auto residency = renderer->context()->residencySet();
-    for (uint32_t i = 0; i < MaxFramesInFlight; i++){
+    for (uint32_t i = 0; i < MaxFramesInFlight; i++) {
         residency->addAllocation(_instanceBuffers[i]);
     }
     assetManager->registerWithResidencySet(residency);
@@ -71,59 +93,92 @@ void SpheresScene::setup(Renderer* renderer){
 }
 
 // Update (every frame)
-void SpheresScene::update(float dt){
-    _rotation+=dt;
+void SpheresScene::update(float dt) {
+    auto view = _registry.view<TransformComponent>();
     
-    for (uint32_t i = 0; i < kInstanceCount; i++){
-        float xPos = (float)i * 1.2 - (float)(kInstanceCount - 1) / 2.0f;
+    int index = 0;
+    
+    view.each([&](auto entity, TransformComponent &t) {
+        float wave = sinf(_renderer->totalTime() * 2.0f + index * 0.8f);
+        t.position.y = wave * 0.5f;
+        t.rotation.y += dt;
+        t.rotation.x += dt * 0.5f;
         
-        float angle = _rotation * (1.0f + i * 0.2f);
+        index++;
+    });
+    
+    auto viewMesh = _registry.view<TransformComponent, MeshComponent>();
+
+    viewMesh.each([&](auto entity, TransformComponent &t, MeshComponent &m) {
+        float wave = sinf(_renderer->totalTime() * 2.0f + index * 0.8f);
         
-        simd_float4x4 rotationY = matrix4x4_rotation(angle, 0.0f, 1.0f, 0.0f);
-        simd_float4x4 rotationX = matrix4x4_rotation(angle * 0.5f, 1.0f, 0.0f, 0.0f);
-        // Build model matrix
-        simd_float4x4 translation = matrix4x4_translation(xPos, 0.0f, 0.0f);
-        simd_float4x4 rotationMat = simd_mul(rotationY, rotationX);
-        
-        _instances[i].modelMatrix = simd_mul(translation, rotationMat);
-        _instances[i].normalMatrix = _instances[i].modelMatrix;
-    }
+        if (wave > 0) {
+            m.materialAddress = _fabricMatAddress;
+        } else {
+            m.materialAddress = _onyxMatAddress;
+        }
+        index++;
+    });
 }
 
 // Render (every frame) --
 
 void SpheresScene::render(Renderer *renderer) {
-    if (!_sphereMesh) return;
+    if (!_sphereMesh)
+        return;
     
     auto encoder = renderer->currentEncoder();
     auto argTable = renderer->argumentTable();
     uint32_t frameIndex = renderer->context()->frameIndex();
     
-    // Copy instance data to GPU buffer
-    memcpy(_instanceBuffers[frameIndex]->contents(),
-           _instances,
-           sizeof(InstanceData) * kInstanceCount);
+    InstanceData *instanceDataPtr =
+    (InstanceData *)_instanceBuffers[frameIndex]->contents();
+    
+    auto view = _registry.view<TransformComponent, MeshComponent>();
+    
+    uint32_t instanceCount = 0;
+    
+    view.each(
+              [&](auto entity, const TransformComponent &t, const MeshComponent &m) {
+                  matrix_float4x4 translation = matrix4x4_translation(t.position);
+                  
+                  matrix_float4x4 rotX = matrix4x4_rotation(t.rotation.x, 1, 0, 0);
+                  matrix_float4x4 rotY = matrix4x4_rotation(t.rotation.y, 0, 1, 0);
+                  matrix_float4x4 rotZ = matrix4x4_rotation(t.rotation.z, 0, 0, 1);
+                  matrix_float4x4 rotation =
+                  matrix_multiply(rotZ, matrix_multiply(rotY, rotX));
+                  
+                  matrix_float4x4 scale = matrix4x4_scale(t.scale);
+                  matrix_float4x4 modelMatrix =
+                  matrix_multiply(translation, matrix_multiply(rotation, scale));
+                  instanceDataPtr[instanceCount].modelMatrix = modelMatrix;
+                  
+                  matrix_float3x3 upperLeft = matrix3x3_upper_left(modelMatrix);
+                  
+                  instanceDataPtr[instanceCount].materialAddress = m.materialAddress;
+                  
+                  matrix_float3x3 normalM = matrix_inverse_transpose(upperLeft);
+                  instanceDataPtr[instanceCount].normalMatrix = matrix_make_rows(
+                                                                                 normalM.columns[0].x, normalM.columns[1].x, normalM.columns[2].x, 0,
+                                                                                 normalM.columns[0].y, normalM.columns[1].y, normalM.columns[2].y, 0,
+                                                                                 normalM.columns[0].z, normalM.columns[1].z, normalM.columns[2].z, 0,
+                                                                                 0, 0, 0, 1);
+                  instanceCount++;
+              });
+    
+    if (instanceCount == 0)
+        return;
     
     // Bind instance buffers
-    argTable->setAddress(_instanceBuffers[frameIndex]->gpuAddress(),
-                         BufferIndexInstanceData);
+    argTable->setAddress(_instanceBuffers[frameIndex]->gpuAddress(), BufferIndexInstanceData);
     
-    // Bind vertex buffer
     argTable->setAddress(_sphereMesh->vertexAddress(), BufferIndexVertices);
     
-    // Bind texture
-    if (_texture) {
-        argTable->setTexture(_texture->gpuResourceID(), TextureIndexColor);
-    }
-    
-    // draw all instances
-    for (const auto& submesh : _sphereMesh->submeshes()){
-        encoder->drawIndexedPrimitives(MTL::PrimitiveTypeTriangle,
-                                       submesh.indexCount,
-                                       submesh.indexType,
-                                       _sphereMesh->indexAdress(),
-                                       _sphereMesh->indexBuffer()->length(),
-                                       kInstanceCount);
+    for (const auto &submesh : _sphereMesh->submeshes()) {
+        encoder->drawIndexedPrimitives(
+                                       MTL::PrimitiveTypeTriangle, submesh.indexCount, submesh.indexType,
+                                       _sphereMesh->indexAdress(), _sphereMesh->indexBuffer()->length(),
+                                       instanceCount);
     }
 }
-}
+} // namespace Paloma

@@ -29,7 +29,7 @@ bool Renderer::init(MTL::Device *device) {
     _pipelineCache.init(_context.device(), _context.compiler());
     
     // Asset Manager init
-    _assetManager.init(_context.device());
+    _assetManager.init(_context.device(), _context.argumentTable());
     
     // Uniform buffers
     for (uint32_t i=0; i < MaxFramesInFlight; i++){

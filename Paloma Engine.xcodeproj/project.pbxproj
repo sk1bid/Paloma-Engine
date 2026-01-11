@@ -25,6 +25,7 @@
 		395201162F0BCD8300B8242A /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		395201182F0BCDF000B8242A /* libSDL3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3/3.2.28/lib/libSDL3.0.dylib; sourceTree = "<group>"; };
 		39C1ECA32F0BB2D40021EF5B /* apple example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "apple example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		39E0E1CF2F1340D50049C044 /* Metal4Basics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Metal4Basics.xcodeproj; sourceTree = "<group>"; };
 		39EE21322F0D535F0064F761 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		39EE21342F0D53670064F761 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		39EE21362F0D536C0064F761 /* ModelIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ModelIO.framework; path = System/Library/Frameworks/ModelIO.framework; sourceTree = SDKROOT; };
@@ -39,6 +40,11 @@
 		39C1ECA52F0BB2D40021EF5B /* Paloma Engine */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Paloma Engine";
+			sourceTree = "<group>";
+		};
+		39E0E1D12F1340D50049C044 /* metal-4-basics-master 2 */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "metal-4-basics-master 2";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -91,6 +97,7 @@
 				3952010F2F0BCD7500B8242A /* Frameworks */,
 				39C1ECA42F0BB2D40021EF5B /* Products */,
 				39A000192F0E2E250067EFAB /* Apple Code */,
+				39E0E1D12F1340D50049C044 /* metal-4-basics-master 2 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,6 +106,13 @@
 			children = (
 				39C1ECA32F0BB2D40021EF5B /* apple example.app */,
 				39298E8A2F0D1992003F4BD1 /* Paloma Engine.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39E0E1D32F1340D50049C044 /* Products */ = {
+			isa = PBXGroup;
+			children = (
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -160,6 +174,9 @@
 				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 2610;
 				TargetAttributes = {
+					39298E7E2F0D1992003F4BD1 = {
+						LastSwiftMigration = 2610;
+					};
 					39C1ECA22F0BB2D40021EF5B = {
 						CreatedOnToolsVersion = 26.1.1;
 					};
@@ -177,6 +194,12 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 39C1ECA42F0BB2D40021EF5B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 39E0E1D32F1340D50049C044 /* Products */;
+					ProjectRef = 39E0E1CF2F1340D50049C044 /* Metal4Basics.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				39C1ECA22F0BB2D40021EF5B /* apple example */,
@@ -226,6 +249,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++23";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -260,7 +284,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				SYSTEM_HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Paloma Engine/Libs/metal-cpp\"",
+					"\"$(SRCROOT)/Paloma Engine/Libs/\"/**",
 					/opt/homebrew/include/,
 				);
 			};
@@ -272,6 +296,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++23";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -306,7 +331,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				SYSTEM_HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/Paloma Engine/Libs/metal-cpp\"",
+					"\"$(SRCROOT)/Paloma Engine/Libs/\"/**",
 					/opt/homebrew/include/,
 				);
 			};

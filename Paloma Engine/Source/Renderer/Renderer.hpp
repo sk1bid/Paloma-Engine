@@ -63,6 +63,7 @@ public:
     // -- Accessors --
     Context* context() {return &_context;}
     AssetManager* assetManager() { return &_assetManager;}
+    float totalTime() {return _totalTime;}
     MTL4::RenderCommandEncoder* currentEncoder() { return _currentEncoder; }
     MTL4::ArgumentTable* argumentTable();
     

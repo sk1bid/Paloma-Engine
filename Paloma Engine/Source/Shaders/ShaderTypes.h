@@ -10,11 +10,16 @@
 
 #include <simd/simd.h>
 
+#ifndef __METAL__
+#include <Metal/MTLTypes.hpp>
+#endif
+
 // -- buffer indices for argument table --
 enum BufferIndex {
     BufferIndexUniforms = 0,  // frame uniforms
     BufferIndexVertices = 1,  // vertex data
     BufferIndexInstanceData = 2,  // Instance transforms
+    BufferIndexMaterial = 3,
 };
 
 // -- texture indices for argument table --
@@ -43,6 +48,7 @@ struct FrameUniforms {
 struct InstanceData {
     simd_float4x4 modelMatrix; // world transform
     simd_float4x4 normalMatrix;
+    uint64_t materialAddress;
 };
 
 // -- Vertex for procedural mesh ---
@@ -51,5 +57,39 @@ struct Vertex {
     simd_float3 normal;
     simd_float2 texcoord;
 };
+
+typedef struct {
+    simd_float4 baseColorFactor;
+    float opacityFactor;
+    float normalScale;
+    float occlusionStrength;
+    float metallicFactor;
+    float roughnessFactor;
+    simd_float3 emissiveFactor;
+    float alphaCutoff;
+} MaterialConstants;
+
+typedef struct {
+    MaterialConstants constants;
+    
+#ifdef __METAL__
+    metal::texture2d<float> baseColorTexture;
+    metal::texture2d<float> normalTexture;
+    metal::texture2d<float> emissiveTexture;
+    metal::texture2d<float> occlusionTexture;
+    metal::texture2d<float> metalnessTexture;
+    metal::texture2d<float> roughnessTexture;
+    metal::texture2d<float> opacityTexture;
+#else
+    MTL::ResourceID baseColorTexture;
+    MTL::ResourceID normalTexture;
+    MTL::ResourceID emissiveTexture;
+    MTL::ResourceID occlusionTexture;
+    MTL::ResourceID metalnessTexture;
+    MTL::ResourceID roughnessTexture;
+    MTL::ResourceID opacityTexture;
+#endif
+} MaterialArguments;
+
 
 #endif

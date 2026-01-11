@@ -10,6 +10,7 @@
 #include "Types.hpp"
 #include <simd/simd.h>
 #include "Camera.hpp"
+#include <entt.hpp>
 
 namespace Paloma {
 
@@ -42,5 +43,6 @@ public:
 
 protected:
     Camera _camera;
+    entt::registry _registry;
 };
 }
