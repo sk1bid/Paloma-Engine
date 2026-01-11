@@ -32,29 +32,50 @@ void SpheresScene::setup(Renderer *renderer) {
     auto device = _renderer->context()->device();
     auto assetManager = _renderer->assetManager();
     
-    MaterialArguments fabricMat = {};
-    MaterialArguments onyxMat = {};
-    
-    
     // Load sphere mesh
     _sphereMesh = assetManager->getPrimitive("sphere");
     
-    // Load texture
-    std::string texPathBox =
-    Bridge::getBundleResourcePath("Onyx011_2K-PNG_Color", "png");
-    std::string texPathFabric =
-    Bridge::getBundleResourcePath("Fabric080_2K-PNG_Color", "png");
+    // Add onyx mat
+    MaterialArguments onyxMat = {};
+    std::string texPathOnyx = Bridge::getBundleResourcePath("Onyx011_2K-PNG_Color", "png");
+    std::string pathOnyxNormal = Bridge::getBundleResourcePath("Onyx011_2K-PNG_NormalGL", "png");
+    std::string pathOnyxRoughness = Bridge::getBundleResourcePath("Onyx011_2K-PNG_Roughness", "png");
     
-    auto textureOnyx = assetManager->getTexture(texPathBox.c_str(), true);
-    auto textureFabric = assetManager->getTexture(texPathFabric.c_str(), true);
-    
-    fabricMat.baseColorTexture = textureFabric.texture->gpuResourceID();
+    auto textureOnyx = assetManager->getTexture(texPathOnyx.c_str(), true);
+    auto texOnyxNormal = assetManager->getTexture(pathOnyxNormal.c_str(), false);
+    auto texOnyxRoughness = assetManager->getTexture(pathOnyxRoughness.c_str(), false);
     
     onyxMat.baseColorTexture = textureOnyx.texture->gpuResourceID();
+    onyxMat.normalTexture = texOnyxNormal.texture->gpuResourceID();
+    onyxMat.roughnessTexture = texOnyxRoughness.texture->gpuResourceID();
+    
+    MaterialConstants onyxParams = {};
+    onyxParams.metallicFactor = 0.0;
+    onyxParams.roughnessFactor = 0.1;
+    onyxMat.constants = onyxParams;
     
     _onyxMatAddress = assetManager->createMaterial("Onyx", onyxMat);
-    _fabricMatAddress = assetManager->createMaterial("Fabric", fabricMat);
     
+    // Add fabric material
+    MaterialArguments fabricMat = {};
+    std::string texPathFabric = Bridge::getBundleResourcePath("Fabric080_2K-PNG_Color", "png");
+    std::string pathFabricNormal = Bridge::getBundleResourcePath("Fabric080_2K-PNG_NormalGL", "png");
+    std::string pathFabricRoughness = Bridge::getBundleResourcePath("Fabric080_2K-PNG_Roughness", "png");
+    
+    auto textureFabric = assetManager->getTexture(texPathFabric.c_str(), true);
+    auto texFabricNormal = assetManager->getTexture(pathFabricNormal.c_str(), false);
+    auto texFabricRoughness = assetManager->getTexture(pathFabricRoughness.c_str(),
+                                                       false);
+    MaterialConstants fabricParams = {};
+    fabricParams.metallicFactor = 0.0;
+    fabricParams.roughnessFactor = 1.0;
+    fabricMat.constants = fabricParams;
+    
+    fabricMat.baseColorTexture = textureFabric.texture->gpuResourceID();
+    fabricMat.normalTexture = texFabricNormal.texture->gpuResourceID();
+    fabricMat.roughnessTexture = texFabricRoughness.texture->gpuResourceID();
+    
+    _fabricMatAddress = assetManager->createMaterial("Fabric", fabricMat);
     
     
     for (int i = 0; i < kInstanceCount; i++) {
@@ -62,7 +83,7 @@ void SpheresScene::setup(Renderer *renderer) {
         
         float x = (i - 2) * 1.5f;
         _registry.emplace<TransformComponent>(entity, vector_float3{x, 0, 0}, // pos
-                                              vector_float3{0, 0, 0},         // rot
+                                              vector_float3{0, 0, 0},// rot
                                               vector_float3{1, 1, 1} // scale
                                               );
         
@@ -88,7 +109,7 @@ void SpheresScene::setup(Renderer *renderer) {
     assetManager->registerWithResidencySet(residency);
     
     // Setup camera
-    _camera.position = {0.0f, 0.0f, 5.0f};
+    _camera.position = {0.0f, 0.0f, 2.0f};
     _camera.target = {0.0f, 0.0f, 0.0f};
 }
 
@@ -108,7 +129,7 @@ void SpheresScene::update(float dt) {
     });
     
     auto viewMesh = _registry.view<TransformComponent, MeshComponent>();
-
+    
     viewMesh.each([&](auto entity, TransformComponent &t, MeshComponent &m) {
         float wave = sinf(_renderer->totalTime() * 2.0f + index * 0.8f);
         
