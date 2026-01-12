@@ -1,8 +1,0 @@
-//
-//  test.cpp
-//  Paloma Engine
-//
-//  Created by Artem on 11.01.2026.
-//
-
-#include "test.h"

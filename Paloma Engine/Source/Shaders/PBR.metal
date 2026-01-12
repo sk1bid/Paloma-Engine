@@ -169,10 +169,10 @@ fragment float4 fragmentMain (
     finalColor *= 0.9;
     float3 mapped = ToneMapACES(finalColor);
     // --- DEBUG SECTION ---
-    //return float4(N * 0.5 + 0.5, 1.0);     // 1. Проверка нормалей (должны быть пупырышки)
-    //return float4(float3(roughness), 1.0); // 2. Проверка шероховатости (черный = гладкий, белый = шероховатый)
-    //return float4(specular * 5.0, 1.0);    // 3. ТОЛЬКО БЛИКИ (если тут черное - беда в математике)
-    //return float4(diffuse, 1.0);           // 4. Только матовый цвет
+    //return float4(N * 0.5 + 0.5, 1.0);
+    //return float4(float3(roughness), 1.0);
+    //return float4(specular * 5.0, 1.0);
+    //return float4(diffuse, 1.0);
     return float4(pow(mapped, float3(1.0/2.2)), 1.0);
     
 }
