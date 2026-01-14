@@ -33,34 +33,46 @@ void SpheresScene::setup(Renderer *renderer) {
     auto assetManager = _renderer->assetManager();
     _environmentBuffer = device->newBuffer(sizeof(EnvironmentData), MTL::ResourceStorageModeShared);
     // Load sphere mesh
-    _sphereMesh = assetManager->getPrimitive("sphere");
+    _sphereMesh = assetManager->getPrimitive("box");
     
     // Load skybox hdr texture
     std::string pathSkyboxHDR = Bridge::getBundleResourcePath("kloppenheim_06_4k", "hdr");
     auto hdrRes = assetManager->getHDRTexture(pathSkyboxHDR.c_str());
-    _skyboxTexture = hdrRes.texture;
-    _skyboxTextureIndex = hdrRes.bindlessIndex;
     
-    // Add onyx mat
-    MaterialArguments onyxMat = {};
-    std::string texPathOnyx = Bridge::getBundleResourcePath("Onyx011_2K-PNG_Color", "png");
-    std::string pathOnyxNormal = Bridge::getBundleResourcePath("Onyx011_2K-PNG_NormalGL", "png");
-    std::string pathOnyxRoughness = Bridge::getBundleResourcePath("Onyx011_2K-PNG_Roughness", "png");
+    auto iblAllocator = device->newCommandAllocator();
+    _iblResource = IBLGenerator::generate(
+        device,
+        renderer->context()->commandQueue(),
+        iblAllocator,
+        hdrRes.texture,
+        512
+    );
+    iblAllocator->release();
+    _skyboxTexture = _iblResource.environmentCubemap;
     
-    auto textureOnyx = assetManager->getTexture(texPathOnyx.c_str(), true);
-    auto texOnyxNormal = assetManager->getTexture(pathOnyxNormal.c_str(), false);
-    //auto texOnyxRoughness = assetManager->getTexture(pathOnyxRoughness.c_str(), false);
+    // Add metal mat
+    MaterialArguments metalMat = {};
+    std::string pathMetalColor = Bridge::getBundleResourcePath("storage-container2-albedo", "png");
+    std::string pathMetalNormal = Bridge::getBundleResourcePath("storage-container2-normal-ogl", "png");
+    std::string pathMetalRoughness = Bridge::getBundleResourcePath("storage-container2-roughness", "png");
+    std::string pathMetalMetalness = Bridge::getBundleResourcePath("storage-container2-metallic", "png");
     
-    onyxMat.baseColorTexture = textureOnyx.texture->gpuResourceID();
-    onyxMat.normalTexture = texOnyxNormal.texture->gpuResourceID();
-    //onyxMat.roughnessTexture = texOnyxRoughness.texture->gpuResourceID();
+    auto texMetalColor = assetManager->getTexture(pathMetalColor.c_str(), true);
+    auto texMetalNormal = assetManager->getTexture(pathMetalNormal.c_str(), false);
+    auto texMetalRoughness = assetManager->getTexture(pathMetalRoughness.c_str(),false);
+    auto texMetalMetalness = assetManager->getTexture(pathMetalMetalness.c_str(), false);
     
-    MaterialConstants onyxParams = {};
-    onyxParams.metallicFactor = 0.0;
-    onyxParams.roughnessFactor = 0.1;
-    onyxMat.constants = onyxParams;
+    metalMat.baseColorTexture = texMetalColor.texture->gpuResourceID();
+    metalMat.normalTexture = texMetalNormal.texture->gpuResourceID();
+    metalMat.roughnessTexture = texMetalRoughness.texture->gpuResourceID();
+    metalMat.metalnessTexture = texMetalMetalness.texture->gpuResourceID();
     
-    _onyxMatAddress = assetManager->createMaterial("Onyx", onyxMat);
+    MaterialConstants metalParams = {};
+    metalParams.metallicFactor = 1;
+    metalParams.roughnessFactor = 0.3;
+    metalMat.constants = metalParams;
+    
+    _metalMatAddress = assetManager->createMaterial("Metal", metalMat);
     
     // Add fabric material
     MaterialArguments fabricMat = {};
@@ -112,7 +124,15 @@ void SpheresScene::setup(Renderer *renderer) {
     for (uint32_t i = 0; i < MaxFramesInFlight; i++) {
         residency->addAllocation(_instanceBuffers[i]);
     }
+    if (_iblResource.readyEvent) {
+        renderer->context()->commandQueue()->wait(_iblResource.readyEvent, 1);
+        _iblResource.readyEvent->release();
+        _iblResource.readyEvent = nullptr;
+    }
+    
+    
     assetManager->registerWithResidencySet(residency);
+
     
     // Setup camera
     _camera.position = {0.0f, 0.0f, 2.0f};
@@ -126,19 +146,19 @@ void SpheresScene::update(float dt) {
     auto view = _registry.view<TransformComponent>();
     
     float time = _renderer->totalTime();
-        float radius = 5.0f;
-        float height = 1.0f;
-        float speed = 0.3f;
-        
-        float theta = time * speed;
-        
-        _camera.position = simd_make_float3(
-            radius * sin(theta),
-            height + sin(theta) * 0.5f,
-            radius * cos(theta)
-        );
-        
-        _camera.target = simd_make_float3(0.0f, 0.0f, 0.0f);
+    float radius = 5.0f;
+    float height = 1.0f;
+    float speed = 0.3f;
+    
+    float theta = time * speed;
+    
+    _camera.position = simd_make_float3(
+                                        radius * sin(theta),
+                                        height + sin(theta) * 0.5f,
+                                        radius * cos(theta)
+                                        );
+    
+    _camera.target = simd_make_float3(0.0f, 0.0f, 0.0f);
     
     int index = 0;
     
@@ -157,9 +177,9 @@ void SpheresScene::update(float dt) {
         float wave = sinf(_renderer->totalTime() * 2.0f + index * 0.8f);
         
         if (wave > 0) {
-            m.materialAddress = _fabricMatAddress;
+            //m.materialAddress = _fabricMatAddress;
         } else {
-            m.materialAddress = _onyxMatAddress;
+            m.materialAddress = _metalMatAddress;
         }
         index++;
     });

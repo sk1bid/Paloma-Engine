@@ -65,12 +65,13 @@ struct Vertex {
 
 struct EnvironmentData {
 #ifdef __METAL__
-    metal::texture2d<float> skyboxTexture;
+    metal::texturecube<float> skyboxMap;
+    metal::texturecube<float> prefilteredMap;
 #else
-    MTL::ResourceID skyboxTextureID;
+    MTL::ResourceID skyboxMapID;
+    MTL::ResourceID prefilteredMapID;
 #endif
 };
-
 typedef struct {
     simd_float4 baseColorFactor;
     float opacityFactor;

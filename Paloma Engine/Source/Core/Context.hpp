@@ -73,6 +73,7 @@ public:
     MTL4::Compiler* compiler() const {return _compiler;}
     MTL4::ArgumentTable* argumentTable() const {return _argumentTable;}
     MTL::ResidencySet* residencySet() const {return _residencySet;}
+    MTL4::CommandQueue* commandQueue() { return _commandQueue; }
     
     /// Index of circle buffer. Use to choose current CommandAllocator
     /// _frameIndex = 0,1,2,0,1,2,0...

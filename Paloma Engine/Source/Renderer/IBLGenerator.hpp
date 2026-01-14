@@ -12,32 +12,25 @@
 namespace Paloma {
 
 struct IBLResource {
-    MTL::Texture* irradianceMap = nullptr; // diffuse
-    MTL::Texture* prefilteredMap = nullptr; // Specular with mipmaps
+    MTL::Texture* environmentCubemap = nullptr;
+    MTL::Texture* prefilteredMap = nullptr;
     MTL::Texture* brdfLut = nullptr;
-    
-    void release() {
-        if (irradianceMap){
-            irradianceMap->release();
-        }
-        if (prefilteredMap){
-            prefilteredMap->release();
-        }
-        if (brdfLut){
-            brdfLut->release();
-        }
-    }
+    MTL::Event* readyEvent = nullptr;
 };
 
 class IBLGenerator {
 public:
-    static IBLResource generate(MTL::Device* device,
-                                MTL::CommandQueue* queue,
-                                const std::string& hdrPath);
+    static IBLResource generate(
+                                MTL::Device* device,
+                                MTL4::CommandQueue* queue,
+                                MTL4::CommandAllocator* allocator,
+                                MTL::Texture* equirectTexture,
+                                uint32_t cubemapSize = 512
+                                );
     
 private:
-    static MTL::Texture* createSpecularMap(MTL::Device* device, uint32_t size);
-    static MTL::Texture* createIrradianceMap(MTL::Device* device, uint32_t size);
-    static MTL::Texture* createBrdfLut(MTL::Device* device, uint32_t size);
+    static MTL::Texture* createCubemap(MTL::Device* device, uint32_t size, bool withMips);
+    static MTL::Texture* createBRDFLut(MTL::Device* device, uint32_t size);
 };
+
 }

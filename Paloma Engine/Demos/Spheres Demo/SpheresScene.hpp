@@ -33,7 +33,7 @@ private:
     Mesh *_sphereMesh = nullptr;
     
     
-    uint64_t _onyxMatAddress = 0;
+    uint64_t _metalMatAddress = 0;
     uint64_t _fabricMatAddress = 0;
 
     MTL::Buffer *_instanceBuffers[MaxFramesInFlight] = {};

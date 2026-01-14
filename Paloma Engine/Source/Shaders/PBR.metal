@@ -8,6 +8,7 @@
 #include <metal_stdlib>
 #include <simd/simd.h>
 #include "ShaderTypes.h"
+#include "Common.metal"
 
 using namespace metal;
 
@@ -24,16 +25,6 @@ float2x3 cotangents(float3 N, float3 p, float2 uv) {
     float invmax = rsqrt(max(dot(T, T), dot(B, B)));
     return float2x3(T * invmax, B * invmax);
 }
-
-float3 ToneMapACES(float3 x) {
-    float a = 2.51f;
-    float b = 0.03f;
-    float c = 2.43f;
-    float d = 0.59f;
-    float e = 0.14f;
-    return saturate((x * (a * x + b)) / (x * (c * x + d) + e));
-}
-
 
 
 // -- Texture Sampler --
@@ -127,6 +118,9 @@ fragment float4 fragmentMain (
     uint64_t addr = instances[in.instanceID].materialAddress;
     device const MaterialArguments &material = *(device const MaterialArguments*)addr;
     
+    // environment data
+    device const EnvironmentData& env = *(device const EnvironmentData*)uniforms.environmentAddress;
+    
     // vectors in world
     float3 V = normalize(uniforms.cameraPosition - in.worldPos);
     float3 L = normalize(float3(1.0, 1.0, 1.0));
@@ -137,6 +131,11 @@ fragment float4 fragmentMain (
     float3 nt = material.normalTexture.sample(textureSampler, in.texcoord).rgb * 2.0 - 1.0;
     float3 N = normalize(TB[0] * nt.x + TB[1] * nt.y + in.normal * nt.z);
     
+    // Reflection vector
+    float3 R = reflect(-V, N);
+    
+   
+
     // material settings
     float metallic = material.constants.metallicFactor;
     if (material.metalnessTexture.get_width() > 0) {
@@ -149,6 +148,14 @@ fragment float4 fragmentMain (
     roughness = clamp(roughness, 0.05f, 1.0f);
     float3 albedo = material.baseColorTexture
         .sample(textureSampler, in.texcoord).rgb;
+    
+    // Sample HDR environment
+    constexpr sampler cubeSampler(filter::linear, mip_filter::linear);
+    float lod = roughness * float(env.prefilteredMap.get_num_mip_levels() - 1);
+    //return float4(float3(lod / 10.0), 1.0);
+    float3 reflection = env.prefilteredMap.sample(cubeSampler, R, level(lod)).rgb;
+    
+    reflection *= metallic;
     
     float3 F0 = mix(float3(0.04), albedo, metallic);
     
@@ -164,12 +171,14 @@ fragment float4 fragmentMain (
     float3 diffuse = kD * albedo / M_PI_F;
 
     float3 finalColor = (diffuse + specular) * NdotL * 3.0;
+    finalColor += reflection * metallic * F;
     finalColor += albedo * 0.03;
 
     finalColor *= 0.9;
     float3 mapped = ToneMapACES(finalColor);
     // --- DEBUG SECTION ---
     //return float4(N * 0.5 + 0.5, 1.0);
+    //return float4(reflection, 1.0);
     //return float4(float3(roughness), 1.0);
     //return float4(specular * 5.0, 1.0);
     //return float4(diffuse, 1.0);

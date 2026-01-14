@@ -11,6 +11,7 @@
 #include <simd/simd.h>
 #include "Camera.hpp"
 #include <entt.hpp>
+#include "IBLGenerator.hpp"
 
 namespace Paloma {
 
@@ -45,11 +46,15 @@ public:
     MTL::Texture* skyboxTexture() const { return _skyboxTexture; }
     uint32_t skyboxTextureIndex() const { return _skyboxTextureIndex; }
     
+    MTL::Texture* prefilteredMap() const { return _iblResource.prefilteredMap; }
+    
 protected:
     Camera _camera;
     entt::registry _registry;
     
     MTL::Texture* _skyboxTexture = nullptr;
     uint32_t _skyboxTextureIndex = 0;
+    
+    IBLResource _iblResource;
 };
 }

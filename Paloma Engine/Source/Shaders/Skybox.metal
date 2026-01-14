@@ -39,32 +39,19 @@ vertex SkyboxOut skyboxVertex(
     return out;
 }
 
-// Equirectangular sampling
-float4 equirectangularSample(float3 direction, texture2d<float> tex) {
-    constexpr sampler s(filter::linear);
-    float3 d = normalize(direction);
-    float2 uv = float2(
-                       (atan2(d.z, d.x) + M_PI_F) / (2.0 * M_PI_F),
-                       acos(d.y) / M_PI_F
-                       );
-    return tex.sample(s, uv);
-}
-
 fragment float4 skyboxFragment(
     SkyboxOut in [[stage_in]],
     constant FrameUniforms& uniforms [[buffer(BufferIndexUniforms)]]
 ) {
     device const EnvironmentData& env = *(device const EnvironmentData*)uniforms.environmentAddress;
     
-    float3 color = equirectangularSample(in.direction, env.skyboxTexture).rgb;
+    constexpr sampler cubeSampler(filter::linear, mip_filter::linear);
+
+    float3 color = env.skyboxMap.sample(cubeSampler, in.direction).rgb;
     
-    color *= 1.0;
-    
-    // ACES Tonemapping
+    // ACES + gamma
     color = ToneMapACES(color);
-    
-    // Gamma correction (sRGB)
-    color = pow(color, float3(1.0 / 2.2));
+    color = pow(color, float3(1.0/2.2));
     
     return float4(color, 1.0);
 }
