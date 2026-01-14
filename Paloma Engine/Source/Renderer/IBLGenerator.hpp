@@ -16,6 +16,7 @@ struct IBLResource {
     MTL::Texture* prefilteredMap = nullptr;
     MTL::Texture* brdfLut = nullptr;
     MTL::Event* readyEvent = nullptr;
+    MTL::Buffer* shBuffer = nullptr;
 };
 
 class IBLGenerator {

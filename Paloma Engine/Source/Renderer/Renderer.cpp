@@ -171,10 +171,14 @@ void Renderer::render(MTL4::RenderPassDescriptor *renderPass,
             EnvironmentData *envData = (EnvironmentData *)_environmentBuffer->contents();
             
             envData->skyboxMapID = _currentScene->skyboxTexture()->gpuResourceID();
-            
             envData->prefilteredMapID = _currentScene->prefilteredMap()->gpuResourceID();
+            envData->brdfLutID = _currentScene->brdfLut()->gpuResourceID();
             
             uniforms.environmentAddress = _environmentBuffer->gpuAddress();
+            
+            if (_currentScene->shBuffer()) {
+                   memcpy(&uniforms.sh, _currentScene->shBuffer()->contents(), sizeof(SHCoefficients));
+               }
         }
     }
     

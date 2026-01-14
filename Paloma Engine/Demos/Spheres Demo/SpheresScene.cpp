@@ -69,7 +69,7 @@ void SpheresScene::setup(Renderer *renderer) {
     
     MaterialConstants metalParams = {};
     metalParams.metallicFactor = 1;
-    metalParams.roughnessFactor = 0.3;
+    metalParams.roughnessFactor = 1;
     metalMat.constants = metalParams;
     
     _metalMatAddress = assetManager->createMaterial("Metal", metalMat);
@@ -137,8 +137,6 @@ void SpheresScene::setup(Renderer *renderer) {
     // Setup camera
     _camera.position = {0.0f, 0.0f, 2.0f};
     _camera.target = {0.0f, 0.0f, 0.0f};
-    
-    printf("Skybox: texture=%p, index=%u\n", _skyboxTexture, _skyboxTextureIndex);
 }
 
 // Update (every frame)
@@ -177,7 +175,7 @@ void SpheresScene::update(float dt) {
         float wave = sinf(_renderer->totalTime() * 2.0f + index * 0.8f);
         
         if (wave > 0) {
-            //m.materialAddress = _fabricMatAddress;
+           // m.materialAddress = _fabricMatAddress;
         } else {
             m.materialAddress = _metalMatAddress;
         }

@@ -46,7 +46,10 @@ public:
     MTL::Texture* skyboxTexture() const { return _skyboxTexture; }
     uint32_t skyboxTextureIndex() const { return _skyboxTextureIndex; }
     
+    // -- IBL--
     MTL::Texture* prefilteredMap() const { return _iblResource.prefilteredMap; }
+    MTL::Texture* brdfLut() const { return _iblResource.brdfLut; }
+    MTL::Buffer* shBuffer() const { return _iblResource.shBuffer; }
     
 protected:
     Camera _camera;

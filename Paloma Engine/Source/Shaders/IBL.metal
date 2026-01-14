@@ -124,3 +124,172 @@ kernel void PrefilterEnvironmentMap(
     prefilteredColor /= max(totalWeight, 0.001);
     destTexture.write(float4(prefilteredColor, 1.0), gid.xy, face);
 }
+
+float GeometrySchlickGGX_IBL(float NdotV, float roughness) {
+    float a = roughness;
+    float k = (a * a) / 2.0;
+    
+    float nom = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+    
+    return nom / denom;
+}
+float GeometrySmith_IBL(float NdotV, float NdotL, float roughness) {
+    float ggx2 = GeometrySchlickGGX_IBL(NdotV, roughness);
+    float ggx1 = GeometrySchlickGGX_IBL(NdotL, roughness);
+    return ggx1 * ggx2;
+}
+kernel void IntegrateBRDF(
+    texture2d<float, access::write> lut [[texture(0)]],
+    uint2 gid [[thread_position_in_grid]]
+) {
+    uint size = lut.get_width();
+    if (gid.x >= size || gid.y >= size) return;
+    
+    float NdotV = (float(gid.x) + 0.5) / float(size);
+    float roughness = (float(gid.y) + 0.5) / float(size);
+    
+    // Clamp NdotV to avoid divide by zero
+    NdotV = max(NdotV, 0.001);
+    
+    float3 V;
+    V.x = sqrt(1.0 - NdotV * NdotV);  // sin(theta)
+    V.y = 0.0;
+    V.z = NdotV;                       // cos(theta)
+    
+    float3 N = float3(0.0, 0.0, 1.0);
+    
+    float A = 0.0;  // scale
+    float B = 0.0;  // bias
+    
+    const uint SAMPLE_COUNT = 1024u;
+    
+    for (uint i = 0u; i < SAMPLE_COUNT; ++i) {
+        float2 Xi = Hammersley(i, SAMPLE_COUNT);
+        float3 H = ImportanceSampleGGX(Xi, N, roughness);
+        float3 L = normalize(2.0 * dot(V, H) * H - V);
+        
+        float NdotL = max(L.z, 0.0);
+        float NdotH = max(H.z, 0.0);
+        float VdotH = max(dot(V, H), 0.0);
+        
+        if (NdotL > 0.0) {
+            float G = GeometrySmith_IBL(NdotV, NdotL, roughness);
+            float G_Vis = (G * VdotH) / (NdotH * NdotV);
+            float Fc = pow(1.0 - VdotH, 5.0);
+            
+            A += (1.0 - Fc) * G_Vis;
+            B += Fc * G_Vis;
+        }
+    }
+    
+    A /= float(SAMPLE_COUNT);
+    B /= float(SAMPLE_COUNT);
+    
+    lut.write(float4(A, B, 0.0, 1.0), gid);
+}
+
+// ============================================
+// Spherical Harmonics Projection
+// ============================================
+
+constant float SH_A0 = 3.141593f;
+constant float SH_A1 = 2.094395f;
+constant float SH_A2 = 0.785398f;
+
+// Combined basis * Lambert coefficients
+float shBasis0(float3 n) { return 0.282095f * SH_A0; }
+float shBasis1(float3 n) { return 0.488603f * n.y * SH_A1; }
+float shBasis2(float3 n) { return 0.488603f * n.z * SH_A1; }
+float shBasis3(float3 n) { return 0.488603f * n.x * SH_A1; }
+float shBasis4(float3 n) { return 1.092548f * n.x * n.y * SH_A2; }
+float shBasis5(float3 n) { return 1.092548f * n.y * n.z * SH_A2; }
+float shBasis6(float3 n) { return 0.315392f * (3.0f * n.z * n.z - 1.0f) * SH_A2; }
+float shBasis7(float3 n) { return 1.092548f * n.x * n.z * SH_A2; }
+float shBasis8(float3 n) { return 0.546274f * (n.x * n.x - n.y * n.y) * SH_A2; }
+
+// Accurate solid angle for cubemap texel
+float texelSolidAngle(float u, float v) {
+    // u, v in range [-1, 1]
+    float x = u;
+    float y = v;
+    float denom = (x * x + y * y + 1.0f);
+    return 4.0f / (denom * sqrt(denom));
+}
+
+// Threadgroup size must match dispatch
+#define SH_THREADGROUP_SIZE 64
+
+kernel void ProjectToSH(
+    texturecube<float, access::sample> envMap [[texture(0)]],
+    device atomic_float* shCoeffs [[buffer(0)]],
+    constant uint& cubemapSize [[buffer(1)]],
+    uint3 gid [[thread_position_in_grid]],
+    uint lid [[thread_index_in_threadgroup]],
+    uint3 tgid [[threadgroup_position_in_grid]]
+) {
+    // Threadgroup shared memory for local reduction
+    threadgroup float3 localSH[9][SH_THREADGROUP_SIZE];
+    
+    // Initialize local accumulators
+    for (int i = 0; i < 9; i++) {
+        localSH[i][lid] = float3(0.0f);
+    }
+    
+    uint size = cubemapSize;
+    uint face = gid.z;
+    
+    if (gid.x < size && gid.y < size && face < 6) {
+        // UV in [0,1]
+        float2 uv = (float2(gid.xy) + 0.5f) / float(size);
+        
+        // UV in [-1,1] for solid angle calculation
+        float2 ndc = uv * 2.0f - 1.0f;
+        
+        float3 dir = getCubeDirection(face, uv);
+        
+        // Sample environment
+        constexpr sampler s(filter::linear);
+        
+        // Accurate solid angle
+        // 1. Убираем лишнее деление на 6.0f
+        // Сумма всех texelSolidAngle по всем 6 граням уже дает 4*PI (площадь сферы).
+        float solidAngle = texelSolidAngle(ndc.x, ndc.y) / float(size * size);
+        // 2. Читаем реальный цвет из текстуры (важно: без фильтрации, точка-в-точку)
+        float3 color = envMap.read(gid.xy, face).rgb;
+        // 3. Умножаем цвет на вес пикселя
+        float3 weighted = color * solidAngle;
+        // 4. Базисные функции должны быть простыми полиномами (без констант)
+        // Это позволит нам сделать всю тяжелую математику один раз в фрагментном шейдере.
+        localSH[0][lid] = weighted;                // L00: 1
+        localSH[1][lid] = weighted * dir.y;        // L1m1: y
+        localSH[2][lid] = weighted * dir.z;        // L10: z
+        localSH[3][lid] = weighted * dir.x;        // L11: x
+        localSH[4][lid] = weighted * dir.x * dir.y;// L2m2: x*y
+        localSH[5][lid] = weighted * dir.y * dir.z;// L2m1: y*z
+        localSH[6][lid] = weighted * (3.0 * dir.z * dir.z - 1.0); // L20: 3z^2-1
+        localSH[7][lid] = weighted * dir.x * dir.z;// L21: x*z
+        localSH[8][lid] = weighted * (dir.x * dir.x - dir.y * dir.y); // L22: x^2-y^2
+    }
+    
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    
+    // Parallel reduction within threadgroup
+    for (uint stride = SH_THREADGROUP_SIZE / 2; stride > 0; stride /= 2) {
+        if (lid < stride) {
+            for (int i = 0; i < 9; i++) {
+                localSH[i][lid] += localSH[i][lid + stride];
+            }
+        }
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+    }
+    
+    // First thread writes to global memory (atomic)
+    if (lid == 0) {
+        for (int i = 0; i < 9; i++) {
+            atomic_fetch_add_explicit(shCoeffs + i * 3 + 0, localSH[i][0].x, memory_order_relaxed);
+            atomic_fetch_add_explicit(shCoeffs + i * 3 + 1, localSH[i][0].y, memory_order_relaxed);
+            atomic_fetch_add_explicit(shCoeffs + i * 3 + 2, localSH[i][0].z, memory_order_relaxed);
+        }
+    }
+}

@@ -40,6 +40,8 @@ IBLResource IBLGenerator::generate(
     result.environmentCubemap = createCubemap(device, cubemapSize, true);
     result.prefilteredMap = createCubemap(device, cubemapSize, true);
     result.brdfLut = createBRDFLut(device, 512);
+    result.shBuffer = device->newBuffer(27 * sizeof(float), MTL::ResourceStorageModeShared);
+    memset(result.shBuffer->contents(), 0, 27 * sizeof(float));
     
     auto library = device->newDefaultLibrary();
     NS::Error* error = nullptr;
@@ -53,6 +55,16 @@ IBLResource IBLGenerator::generate(
         NS::String::string("PrefilterEnvironmentMap", NS::UTF8StringEncoding)
     );
     auto prefilterPSO = device->newComputePipelineState(prefilterFunc, &error);
+    
+    auto brdfFunc = library->newFunction(
+        NS::String::string("IntegrateBRDF", NS::UTF8StringEncoding)
+    );
+    auto brdfPSO = device->newComputePipelineState(brdfFunc, &error);
+    
+    auto shFunc = library->newFunction(
+        NS::String::string("ProjectToSH", NS::UTF8StringEncoding)
+    );
+    auto shPSO = device->newComputePipelineState(shFunc, &error);
     
     auto argTableDesc = MTL4::ArgumentTableDescriptor::alloc()->init();
     argTableDesc->setMaxBufferBindCount(4);
@@ -71,6 +83,7 @@ IBLResource IBLGenerator::generate(
     residencySet->addAllocation(result.prefilteredMap);
     residencySet->addAllocation(result.brdfLut);
     residencySet->addAllocation(paramsBuffer);
+    residencySet->addAllocation(result.shBuffer);
     residencySet->commit();
     
     queue->addResidencySet(residencySet);
@@ -128,6 +141,26 @@ IBLResource IBLGenerator::generate(
         
         mipView->release();
     }
+    
+    encoder->setComputePipelineState(brdfPSO);
+    argTable->setTexture(result.brdfLut->gpuResourceID(), 0);
+    encoder->setArgumentTable(argTable);
+    uint32_t brdfSize = 512;
+    MTL::Size brdfGrid = MTL::Size::Make(brdfSize, brdfSize, 1);
+    MTL::Size brdfThreadgroup = MTL::Size::Make(8, 8, 1);
+    encoder->dispatchThreads(brdfGrid, brdfThreadgroup);
+    
+    encoder->setComputePipelineState(shPSO);
+    uint32_t sizeParam = cubemapSize;
+    memcpy(paramsBuffer->contents(), &sizeParam, sizeof(uint32_t));
+    argTable->setTexture(result.environmentCubemap->gpuResourceID(), 0);
+    argTable->setAddress(result.shBuffer->gpuAddress(), 0);
+    argTable->setAddress(paramsBuffer->gpuAddress(), 1);
+    encoder->setArgumentTable(argTable);
+    MTL::Size shGrid = MTL::Size::Make(cubemapSize, cubemapSize, 6);
+    MTL::Size shThreadgroup = MTL::Size::Make(8, 8, 1);
+    encoder->dispatchThreads(shGrid, shThreadgroup);
+
     encoder->endEncoding();
     cmdBuffer->endCommandBuffer();
     
@@ -140,6 +173,10 @@ IBLResource IBLGenerator::generate(
     // Cleanup
     cubeFromEquirectFunc->release();
     cubeFromEquirectPSO->release();
+    shFunc->release();
+    shPSO->release();
+    brdfFunc->release();
+    brdfPSO->release();
     prefilterFunc->release();
     prefilterPSO->release();
     library->release();

@@ -26,7 +26,30 @@ float2x3 cotangents(float3 N, float3 p, float2 uv) {
     return float2x3(T * invmax, B * invmax);
 }
 
+// Evaluate SH irradiance at direction n
+float3 evaluateSHIrradiance(float3 n, constant SHCoefficients& sh) {
+    // Константы, объединяющие Ylm и Al (Lambertian convolution)
+    const float C1 = 0.429043;
+    const float C2 = 0.511664;
+    const float C3 = 0.743125;
+    const float C4 = 0.886227;
+    const float C5 = 0.247708;
 
+    // Реконструкция по формуле Рамамурти-Ханрахана
+    float3 irradiance =
+        C4 * sh.L00 -
+        C5 * sh.L20 +
+        C3 * sh.L20 * n.z * n.z +
+        C1 * sh.L22 * (n.x * n.x - n.y * n.y) +
+        C1 * sh.L2m2 * n.x * n.y +
+        C1 * sh.L21 * n.x * n.z +
+        C1 * sh.L2m1 * n.y * n.z +
+        C2 * sh.L11 * n.x +
+        C2 * sh.L1m1 * n.y +
+        C2 * sh.L10 * n.z;
+
+    return max(float3(0.0), irradiance);
+}
 // -- Texture Sampler --
 constexpr sampler textureSampler(filter::linear, mip_filter::linear, address::repeat);
 
@@ -110,78 +133,92 @@ vertex VertexOut vertexMain(
 // -- Fragment Shader --
 
 fragment float4 fragmentMain (
-                              VertexOut in [[stage_in]],
-                              constant InstanceData* instances [[buffer(BufferIndexInstanceData)]],
-                              constant FrameUniforms& uniforms [[buffer(BufferIndexUniforms)]]
-                              ) {
-    // get material
+    VertexOut in [[stage_in]],
+    constant InstanceData* instances [[buffer(BufferIndexInstanceData)]],
+    constant FrameUniforms& uniforms [[buffer(BufferIndexUniforms)]]
+) {
+    
     uint64_t addr = instances[in.instanceID].materialAddress;
     device const MaterialArguments &material = *(device const MaterialArguments*)addr;
-    
-    // environment data
     device const EnvironmentData& env = *(device const EnvironmentData*)uniforms.environmentAddress;
     
-    // vectors in world
     float3 V = normalize(uniforms.cameraPosition - in.worldPos);
-    float3 L = normalize(float3(1.0, 1.0, 1.0));
+    float3 L = normalize(float3(1.0, 1.0, 1.0));  // Directional light
     float3 H = normalize(V + L);
     
-    
+    // Normal mapping
     float2x3 TB = cotangents(in.normal, in.worldPos, in.texcoord);
     float3 nt = material.normalTexture.sample(textureSampler, in.texcoord).rgb * 2.0 - 1.0;
     float3 N = normalize(TB[0] * nt.x + TB[1] * nt.y + in.normal * nt.z);
     
-    // Reflection vector
+    // Reflection vector for IBL
     float3 R = reflect(-V, N);
     
-   
-
-    // material settings
+    // -- Material Properties --
+    
     float metallic = material.constants.metallicFactor;
     if (material.metalnessTexture.get_width() > 0) {
         metallic *= material.metalnessTexture.sample(textureSampler, in.texcoord).r;
     }
+    
     float roughness = material.constants.roughnessFactor;
     if (material.roughnessTexture.get_width() > 0) {
         roughness *= material.roughnessTexture.sample(textureSampler, in.texcoord).r;
     }
     roughness = clamp(roughness, 0.05f, 1.0f);
-    float3 albedo = material.baseColorTexture
-        .sample(textureSampler, in.texcoord).rgb;
     
-    // Sample HDR environment
-    constexpr sampler cubeSampler(filter::linear, mip_filter::linear);
-    float lod = roughness * float(env.prefilteredMap.get_num_mip_levels() - 1);
-    //return float4(float3(lod / 10.0), 1.0);
-    float3 reflection = env.prefilteredMap.sample(cubeSampler, R, level(lod)).rgb;
-    
-    reflection *= metallic;
+    float3 albedo = material.baseColorTexture.sample(textureSampler, in.texcoord).rgb;
     
     float3 F0 = mix(float3(0.04), albedo, metallic);
+    
     
     float NdotL = max(dot(N, L), 0.0);
     float NdotV = max(dot(N, V), 0.001);
     float NdotH = max(dot(N, H), 0.0);
     float VdotH = max(dot(V, H), 0.0);
+    
+    // Direct lighting
+    
     float D = distributionGGX(NdotH, roughness);
     float V_vis = visibilityGGX(NdotL, NdotV, roughness);
     float3 F = fresnelSchlick(F0, VdotH);
-    float3 specular = D * V_vis * F;
-    float3 kD = (float3(1.0) - F) * (1.0 - metallic);
-    float3 diffuse = kD * albedo / M_PI_F;
-
-    float3 finalColor = (diffuse + specular) * NdotL * 3.0;
-    finalColor += reflection * metallic * F;
-    finalColor += albedo * 0.03;
-
-    finalColor *= 0.9;
-    float3 mapped = ToneMapACES(finalColor);
-    // --- DEBUG SECTION ---
-    //return float4(N * 0.5 + 0.5, 1.0);
-    //return float4(reflection, 1.0);
-    //return float4(float3(roughness), 1.0);
-    //return float4(specular * 5.0, 1.0);
-    //return float4(diffuse, 1.0);
-    return float4(pow(mapped, float3(1.0/2.2)), 1.0);
     
+    float3 specularDirect = D * V_vis * F;
+    float3 kD = (float3(1.0) - F) * (1.0 - metallic);
+    float3 diffuseDirect = kD * albedo / M_PI_F;
+    
+    float3 directLighting = (diffuseDirect + specularDirect) * NdotL * 3.0;
+    
+    // -- IBL --
+    
+    constexpr sampler cubeSampler(filter::linear, mip_filter::linear);
+    constexpr sampler lutSampler(filter::linear);
+    
+    // Specular IBL
+    float lod = roughness * float(env.prefilteredMap.get_num_mip_levels() - 1);
+    float3 prefilteredColor = env.prefilteredMap.sample(cubeSampler, R, level(lod)).rgb;
+    
+    // BRDF LUT
+    float2 brdf = env.brdfLut.sample(lutSampler, float2(NdotV, roughness)).rg;
+    float3 specularIBL = prefilteredColor * (F0 * brdf.x + brdf.y);
+    
+    
+    // Diffuse IBL
+    float3 irradiance = evaluateSHIrradiance(N, uniforms.sh);
+    float3 diffuseIBL = albedo * irradiance / M_PI_F;
+    
+    // Combine IBL
+    float3 ambientLighting = specularIBL + diffuseIBL * (1.0 - metallic);
+    
+    // ========================================
+    // 7. FINAL COMPOSITION
+    // ========================================
+    
+    float3 finalColor = directLighting + ambientLighting;
+    
+    // Tonemapping
+    float3 mapped = ToneMapACES(finalColor);
+    
+    // Gamma correction
+    return float4(pow(mapped, float3(1.0/2.2)), 1.0);
 }

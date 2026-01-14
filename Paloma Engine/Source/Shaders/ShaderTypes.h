@@ -36,6 +36,19 @@ enum VertexAttribute {
     VertexAttributeTexcoord = 2,
 };
 
+// Spherical Harmonics L2
+struct SHCoefficients {
+    simd_float3 L00;
+    simd_float3 L1m1;
+    simd_float3 L10;
+    simd_float3 L11;
+    simd_float3 L2m2;
+    simd_float3 L2m1;
+    simd_float3 L20;
+    simd_float3 L21;
+    simd_float3 L22;
+};
+
 // -- Frame uniforms for every frame --
 struct FrameUniforms {
     simd_float4x4 viewMatrix;       // Camera
@@ -47,6 +60,7 @@ struct FrameUniforms {
     simd_float3 cameraPosition;
     float time; // for animation
     uint64_t environmentAddress;
+    SHCoefficients sh;
 };
 
 // -- instance data --
@@ -67,9 +81,11 @@ struct EnvironmentData {
 #ifdef __METAL__
     metal::texturecube<float> skyboxMap;
     metal::texturecube<float> prefilteredMap;
+    metal::texture2d<float> brdfLut;
 #else
     MTL::ResourceID skyboxMapID;
     MTL::ResourceID prefilteredMapID;
+    MTL::ResourceID brdfLutID;
 #endif
 };
 typedef struct {
