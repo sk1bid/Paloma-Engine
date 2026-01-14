@@ -51,6 +51,7 @@ public:
     void endFrame(CA::MetalDrawable* drawable, MTL::ResidencySet* layerResidency);
     
     // --Render--
+    void renderSkybox();
     void render(MTL4::RenderPassDescriptor* renderPass,
                 CA::MetalDrawable* drawable,
                 MTL::ResidencySet* layerResidency,
@@ -75,7 +76,10 @@ private:
     
     // --Render state--
     MTL::DepthStencilState* _depthState = nullptr;
+    MTL::DepthStencilState* _skyboxDepthState = nullptr;
+    
     MTL::Buffer* _uniformBuffers[MaxFramesInFlight] = {};
+    MTL::Buffer* _environmentBuffer = nullptr;
     
     // --Current frame --
     MTL4::RenderCommandEncoder* _currentEncoder = nullptr;

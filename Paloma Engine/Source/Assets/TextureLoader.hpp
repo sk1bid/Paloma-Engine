@@ -20,5 +20,9 @@ MTL::Texture* loadFromFile(MTL::Device* device, const char* path, bool sRGB = tr
 
 /// Load texture from bundle
 MTL::Texture* loadFromBundle(MTL::Device* device, const char* path, bool sRGB = true);
+
+/// Load HDR file
+/// @return MTL::Texture* in RGBA16Float (linear color space)
+MTL::Texture* loadHDR(MTL::Device* device, const char* path);
 }
 }

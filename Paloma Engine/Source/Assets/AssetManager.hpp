@@ -48,6 +48,9 @@ public:
     /// Get Texture from bundle
     TextureResource getBundleTexture(const char* name, bool sRGB = true);
     
+    /// Get Texture from .hdr format
+    TextureResource getHDRTexture(const char* path);
+    
     /// Get Texture index
     uint32_t getTextureIndex(const char* path);
     

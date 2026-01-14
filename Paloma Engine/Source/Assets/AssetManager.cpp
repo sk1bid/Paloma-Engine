@@ -115,6 +115,29 @@ TextureResource AssetManager::getBundleTexture(const char* name, bool sRGB) {
     return {nullptr, 0};
 }
 
+TextureResource AssetManager::getHDRTexture(const char* path){
+    std::string key(path);
+    
+    // check cache
+    auto it = _textures.find(key);
+    if (it != _textures.end()){
+        return it->second;
+    }
+    
+    MTL::Texture* texture = TextureLoader::loadHDR(_device, path);
+    if (!texture){
+        return {nullptr, 0};
+    }
+    
+    // register in arg table
+    uint32_t index = _nextTextureIndex++;
+    _argTable->setTexture(texture->gpuResourceID(), index);
+    
+    TextureResource resource = {texture, index};
+    _textures[key] = resource;
+    return resource;
+}
+
 
 uint32_t AssetManager::getTextureIndex(const char* path) {
     auto it = _textures.find(path);

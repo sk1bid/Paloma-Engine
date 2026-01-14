@@ -32,13 +32,17 @@ private:
     // Resources
     Mesh *_sphereMesh = nullptr;
     
+    
     uint64_t _onyxMatAddress = 0;
     uint64_t _fabricMatAddress = 0;
+
     MTL::Buffer *_instanceBuffers[MaxFramesInFlight] = {};
     
     float _rotation = 0.0f;
     
     // Instance data
     InstanceData _instances[kInstanceCount];
+    
+    MTL::Buffer* _environmentBuffer;
 };
 } // namespace Paloma

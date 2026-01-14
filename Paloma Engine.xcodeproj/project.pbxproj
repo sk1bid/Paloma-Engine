@@ -19,6 +19,41 @@
 
 /* Begin PBXFileReference section */
 		39298E8A2F0D1992003F4BD1 /* Paloma Engine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Paloma Engine.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		393406612F174BCC00005B7A /* Hello Triangle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Hello Triangle.xcodeproj"; sourceTree = "<group>"; };
+		393406802F174BCC00005B7A /* MetalKitAndRenderingSetup.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MetalKitAndRenderingSetup.xcodeproj; sourceTree = "<group>"; };
+		393406A62F174BCC00005B7A /* CustomMetalView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = CustomMetalView.xcodeproj; sourceTree = "<group>"; };
+		393406D32F174BCC00005B7A /* Texture Compute.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Texture Compute.xcodeproj"; sourceTree = "<group>"; };
+		393406F72F174BCC00005B7A /* BasicTexturing.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = BasicTexturing.xcodeproj; sourceTree = "<group>"; };
+		393407172F174BCC00005B7A /* DepthTesting.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = DepthTesting.xcodeproj; sourceTree = "<group>"; };
+		393407402F174BCC00005B7A /* MultisampleAntialiasing.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MultisampleAntialiasing.xcodeproj; sourceTree = "<group>"; };
+		393407632F174BCC00005B7A /* BasicArgumentBuffers.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = BasicArgumentBuffers.xcodeproj; sourceTree = "<group>"; };
+		393407922F174BCC00005B7A /* Fence-based Image Filter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Fence-based Image Filter.xcodeproj"; sourceTree = "<group>"; };
+		393407B12F174BCC00005B7A /* Indirect Command Buffers on GPU.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Indirect Command Buffers on GPU.xcodeproj"; sourceTree = "<group>"; };
+		393407D42F174BCC00005B7A /* ArgumentBufferArraysWithHeaps.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ArgumentBufferArraysWithHeaps.xcodeproj; sourceTree = "<group>"; };
+		393408342F174BCC00005B7A /* DynamicTerrainWithArgumentBuffers.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = DynamicTerrainWithArgumentBuffers.xcodeproj; sourceTree = "<group>"; };
+		3934085B2F174BCC00005B7A /* VisibilityResultBuffer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = VisibilityResultBuffer.xcodeproj; sourceTree = "<group>"; };
+		393408F32F174BCC00005B7A /* Deferred Lighting (C++).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Deferred Lighting (C++).xcodeproj"; sourceTree = "<group>"; };
+		393409322F174BCC00005B7A /* Deferred Lighting (ObjC).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Deferred Lighting (ObjC).xcodeproj"; sourceTree = "<group>"; };
+		393409852F174BCC00005B7A /* Deferred Lighting (Swift).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Deferred Lighting (Swift).xcodeproj"; sourceTree = "<group>"; };
+		393409AA2F174BCC00005B7A /* ForwardPlusLightingWithTileShading.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ForwardPlusLightingWithTileShading.xcodeproj; sourceTree = "<group>"; };
+		393409D62F174BCC00005B7A /* ReflectionsWithLayerSelection.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ReflectionsWithLayerSelection.xcodeproj; sourceTree = "<group>"; };
+		39340A332F174BCC00005B7A /* ModernRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ModernRenderer.xcodeproj; sourceTree = "<group>"; };
+		39340A552F174BCC00005B7A /* SimplePathTracer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = SimplePathTracer.xcodeproj; sourceTree = "<group>"; };
+		39340A762F174BCC00005B7A /* RaytracingWithMotion.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = RaytracingWithMotion.xcodeproj; sourceTree = "<group>"; };
+		39340A9D2F174BCC00005B7A /* HybridRendering.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HybridRendering.xcodeproj; sourceTree = "<group>"; };
+		39340ABE2F174BCC00005B7A /* MetalFXUpscaling.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MetalFXUpscaling.xcodeproj; sourceTree = "<group>"; };
+		39340B4C2F174BCC00005B7A /* MeshShadersMetalCPP.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MeshShadersMetalCPP.xcodeproj; sourceTree = "<group>"; };
+		39340B832F174BCC00005B7A /* SparseTextures.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = SparseTextures.xcodeproj; sourceTree = "<group>"; };
+		39340BB22F174BCC00005B7A /* MetalFastResourceLoading.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MetalFastResourceLoading.xcodeproj; sourceTree = "<group>"; };
+		39340BDE2F174BCC00005B7A /* FramePacing.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = FramePacing.xcodeproj; sourceTree = "<group>"; };
+		39340C0B2F174BCC00005B7A /* LODwithFunctionSpecialization.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = LODwithFunctionSpecialization.xcodeproj; sourceTree = "<group>"; };
+		39340C312F174BCC00005B7A /* MetalDynamicLibraries.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MetalDynamicLibraries.xcodeproj; sourceTree = "<group>"; };
+		39340C472F174BCC00005B7A /* Capture Manager.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Capture Manager.xcodeproj"; sourceTree = "<group>"; };
+		39340C662F174BCC00005B7A /* DeviceFallbackForCompute.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = DeviceFallbackForCompute.xcodeproj; sourceTree = "<group>"; };
+		39340C9A2F174BCC00005B7A /* OpenGL and Metal Interoperability.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "OpenGL and Metal Interoperability.xcodeproj"; sourceTree = "<group>"; };
+		39340D882F174BCC00005B7A /* Post Processor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Post Processor.xcodeproj"; sourceTree = "<group>"; };
+		39340DB02F174BCC00005B7A /* Metal4Basics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Metal4Basics.xcodeproj; sourceTree = "<group>"; };
+		39340DD62F174BCC00005B7A /* Metal4Basics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Metal4Basics.xcodeproj; sourceTree = "<group>"; };
 		395201102F0BCD7500B8242A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		395201122F0BCD7A00B8242A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		395201142F0BCD7F00B8242A /* MetalFX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalFX.framework; path = System/Library/Frameworks/MetalFX.framework; sourceTree = SDKROOT; };
@@ -31,19 +66,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		39A000192F0E2E250067EFAB /* Apple Code */ = {
+		39340DD92F174BCC00005B7A /* Docs */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Apple Code";
+			path = Docs;
 			sourceTree = "<group>";
 		};
 		39C1ECA52F0BB2D40021EF5B /* Paloma Engine */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Paloma Engine";
-			sourceTree = "<group>";
-		};
-		39E0E1D12F1340D50049C044 /* metal-4-basics-master 2 */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "metal-4-basics-master 2";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -74,6 +104,251 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		39340DDA2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DDC2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DDE2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DE02F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DE22F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DE42F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DE62F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DE82F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DEA2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DEC2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DEE2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DF02F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DF22F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DF42F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DF62F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DF82F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DFA2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DFC2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340DFE2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E002F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E022F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E042F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E062F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E082F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E0A2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E0C2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E0E2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E102F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E122F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E142F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E162F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E182F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E1A2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E1C2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39340E1E2F174BCC00005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		3952010F2F0BCD7500B8242A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -95,8 +370,7 @@
 				39C1ECA52F0BB2D40021EF5B /* Paloma Engine */,
 				3952010F2F0BCD7500B8242A /* Frameworks */,
 				39C1ECA42F0BB2D40021EF5B /* Products */,
-				39A000192F0E2E250067EFAB /* Apple Code */,
-				39E0E1D12F1340D50049C044 /* metal-4-basics-master 2 */,
+				39340DD92F174BCC00005B7A /* Docs */,
 			);
 			sourceTree = "<group>";
 		};
@@ -147,7 +421,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				39A000192F0E2E250067EFAB /* Apple Code */,
+				39340DD92F174BCC00005B7A /* Docs */,
 			);
 			name = "apple example";
 			packageProductDependencies = (
@@ -186,6 +460,148 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 39C1ECA42F0BB2D40021EF5B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 39340E182F174BCC00005B7A /* Products */;
+					ProjectRef = 393407D42F174BCC00005B7A /* ArgumentBufferArraysWithHeaps.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E1C2F174BCC00005B7A /* Products */;
+					ProjectRef = 393407632F174BCC00005B7A /* BasicArgumentBuffers.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DFC2F174BCC00005B7A /* Products */;
+					ProjectRef = 393406F72F174BCC00005B7A /* BasicTexturing.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DE42F174BCC00005B7A /* Products */;
+					ProjectRef = 39340C472F174BCC00005B7A /* Capture Manager.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DF82F174BCC00005B7A /* Products */;
+					ProjectRef = 393406A62F174BCC00005B7A /* CustomMetalView.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E002F174BCC00005B7A /* Products */;
+					ProjectRef = 393408F32F174BCC00005B7A /* Deferred Lighting (C++).xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DE02F174BCC00005B7A /* Products */;
+					ProjectRef = 393409322F174BCC00005B7A /* Deferred Lighting (ObjC).xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DFA2F174BCC00005B7A /* Products */;
+					ProjectRef = 393409852F174BCC00005B7A /* Deferred Lighting (Swift).xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E122F174BCC00005B7A /* Products */;
+					ProjectRef = 393407172F174BCC00005B7A /* DepthTesting.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DE82F174BCC00005B7A /* Products */;
+					ProjectRef = 39340C662F174BCC00005B7A /* DeviceFallbackForCompute.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E042F174BCC00005B7A /* Products */;
+					ProjectRef = 393408342F174BCC00005B7A /* DynamicTerrainWithArgumentBuffers.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DEE2F174BCC00005B7A /* Products */;
+					ProjectRef = 393407922F174BCC00005B7A /* Fence-based Image Filter.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DEA2F174BCC00005B7A /* Products */;
+					ProjectRef = 393409AA2F174BCC00005B7A /* ForwardPlusLightingWithTileShading.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E1E2F174BCC00005B7A /* Products */;
+					ProjectRef = 39340BDE2F174BCC00005B7A /* FramePacing.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E022F174BCC00005B7A /* Products */;
+					ProjectRef = 393406612F174BCC00005B7A /* Hello Triangle.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DF42F174BCC00005B7A /* Products */;
+					ProjectRef = 39340A9D2F174BCC00005B7A /* HybridRendering.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DF22F174BCC00005B7A /* Products */;
+					ProjectRef = 393407B12F174BCC00005B7A /* Indirect Command Buffers on GPU.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E1A2F174BCC00005B7A /* Products */;
+					ProjectRef = 39340C0B2F174BCC00005B7A /* LODwithFunctionSpecialization.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E062F174BCC00005B7A /* Products */;
+					ProjectRef = 39340B4C2F174BCC00005B7A /* MeshShadersMetalCPP.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E0E2F174BCC00005B7A /* Products */;
+					ProjectRef = 39340DD62F174BCC00005B7A /* Metal4Basics.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DDC2F174BCC00005B7A /* Products */;
+					ProjectRef = 39340DB02F174BCC00005B7A /* Metal4Basics.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E082F174BCC00005B7A /* Products */;
+					ProjectRef = 39340C312F174BCC00005B7A /* MetalDynamicLibraries.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DFE2F174BCC00005B7A /* Products */;
+					ProjectRef = 39340BB22F174BCC00005B7A /* MetalFastResourceLoading.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DE62F174BCC00005B7A /* Products */;
+					ProjectRef = 39340ABE2F174BCC00005B7A /* MetalFXUpscaling.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DF62F174BCC00005B7A /* Products */;
+					ProjectRef = 393406802F174BCC00005B7A /* MetalKitAndRenderingSetup.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DE22F174BCC00005B7A /* Products */;
+					ProjectRef = 39340A332F174BCC00005B7A /* ModernRenderer.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E162F174BCC00005B7A /* Products */;
+					ProjectRef = 393407402F174BCC00005B7A /* MultisampleAntialiasing.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E142F174BCC00005B7A /* Products */;
+					ProjectRef = 39340C9A2F174BCC00005B7A /* OpenGL and Metal Interoperability.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DEC2F174BCC00005B7A /* Products */;
+					ProjectRef = 39340D882F174BCC00005B7A /* Post Processor.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E102F174BCC00005B7A /* Products */;
+					ProjectRef = 39340A762F174BCC00005B7A /* RaytracingWithMotion.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E0A2F174BCC00005B7A /* Products */;
+					ProjectRef = 393409D62F174BCC00005B7A /* ReflectionsWithLayerSelection.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DDA2F174BCC00005B7A /* Products */;
+					ProjectRef = 39340A552F174BCC00005B7A /* SimplePathTracer.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DF02F174BCC00005B7A /* Products */;
+					ProjectRef = 39340B832F174BCC00005B7A /* SparseTextures.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340E0C2F174BCC00005B7A /* Products */;
+					ProjectRef = 393406D32F174BCC00005B7A /* Texture Compute.xcodeproj */;
+				},
+				{
+					ProductGroup = 39340DDE2F174BCC00005B7A /* Products */;
+					ProjectRef = 3934085B2F174BCC00005B7A /* VisibilityResultBuffer.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				39C1ECA22F0BB2D40021EF5B /* apple example */,

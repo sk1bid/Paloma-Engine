@@ -40,9 +40,16 @@ public:
     // --Camera--
     const Camera& camera() const { return _camera; }
     Camera& camera() { return _camera; }
-
+    
+    // -- Skybox --
+    MTL::Texture* skyboxTexture() const { return _skyboxTexture; }
+    uint32_t skyboxTextureIndex() const { return _skyboxTextureIndex; }
+    
 protected:
     Camera _camera;
     entt::registry _registry;
+    
+    MTL::Texture* _skyboxTexture = nullptr;
+    uint32_t _skyboxTextureIndex = 0;
 };
 }

@@ -20,6 +20,7 @@ size_t PipelineDesc::hash() const {
     combine(std::hash<std::string>{}(fragmentFunction));
     combine(std::hash<int>{}(static_cast<int>(colorFormat)));
     combine(std::hash<int>{}(static_cast<int>(depthFormat)));
+    combine(std::hash<bool>{}(hasVertexInput));
     return h;
 }
 
@@ -55,6 +56,11 @@ void PipelineCache::shutdown() {
             pso->release();
     }
     _cache.clear();
+    
+    if (_skyboxPipeline) {
+        _skyboxPipeline->release();
+        _skyboxPipeline = nullptr;
+    }
     
     if (_defaultPipeline) {
         _defaultPipeline->release();
@@ -93,29 +99,30 @@ MTL::RenderPipelineState *PipelineCache::getOrCreate(const PipelineDesc &desc) {
                                                  NS::UTF8StringEncoding));
     
     pipelineDesc->setFragmentFunctionDescriptor(fragmentFuncDesc);
-    
     auto vertexDesc = MTL::VertexDescriptor::alloc()->init();
-    
-    //0: Position (float3 = 12 bytes)
-    vertexDesc->attributes()->object(VertexAttributePosition)->setFormat(MTL::VertexFormatFloat3);
-    vertexDesc->attributes()->object(VertexAttributePosition)->setOffset(0);
-    vertexDesc->attributes()->object(VertexAttributePosition)->setBufferIndex(BufferIndexVertices);
-    
-    //1: Normal (float3 = 12 bytes)
-    vertexDesc->attributes()->object(VertexAttributeNormal)->setFormat(MTL::VertexFormatFloat3);
-    vertexDesc->attributes()->object(VertexAttributeNormal)->setOffset(12);  // После position
-    vertexDesc->attributes()->object(VertexAttributeNormal)->setBufferIndex(BufferIndexVertices);
-    
-    //2: Texcoord (float2 = 8 bytes)
-    vertexDesc->attributes()->object(VertexAttributeTexcoord)->setFormat(MTL::VertexFormatFloat2);
-    vertexDesc->attributes()->object(VertexAttributeTexcoord)->setOffset(24); // После position + normal
-    vertexDesc->attributes()->object(VertexAttributeTexcoord)->setBufferIndex(BufferIndexVertices);
-    
-    // Stride = sizeof(Vertex) = 12 + 12 + 8 = 32 bytes
-    vertexDesc->layouts()->object(BufferIndexVertices)->setStride(32);
-    vertexDesc->layouts()->object(BufferIndexVertices)->setStepFunction(MTL::VertexStepFunctionPerVertex);
-    
-    pipelineDesc->setVertexDescriptor(vertexDesc);
+    if (desc.hasVertexInput){
+        
+        //0: Position (float3 = 12 bytes)
+        vertexDesc->attributes()->object(VertexAttributePosition)->setFormat(MTL::VertexFormatFloat3);
+        vertexDesc->attributes()->object(VertexAttributePosition)->setOffset(0);
+        vertexDesc->attributes()->object(VertexAttributePosition)->setBufferIndex(BufferIndexVertices);
+        
+        //1: Normal (float3 = 12 bytes)
+        vertexDesc->attributes()->object(VertexAttributeNormal)->setFormat(MTL::VertexFormatFloat3);
+        vertexDesc->attributes()->object(VertexAttributeNormal)->setOffset(12);  // После position
+        vertexDesc->attributes()->object(VertexAttributeNormal)->setBufferIndex(BufferIndexVertices);
+        
+        //2: Texcoord (float2 = 8 bytes)
+        vertexDesc->attributes()->object(VertexAttributeTexcoord)->setFormat(MTL::VertexFormatFloat2);
+        vertexDesc->attributes()->object(VertexAttributeTexcoord)->setOffset(24); // После position + normal
+        vertexDesc->attributes()->object(VertexAttributeTexcoord)->setBufferIndex(BufferIndexVertices);
+        
+        // Stride = sizeof(Vertex) = 12 + 12 + 8 = 32 bytes
+        vertexDesc->layouts()->object(BufferIndexVertices)->setStride(32);
+        vertexDesc->layouts()->object(BufferIndexVertices)->setStepFunction(MTL::VertexStepFunctionPerVertex);
+        
+        pipelineDesc->setVertexDescriptor(vertexDesc);
+    }
     // Color attachment (Metal 4 uses colorAttachments array)
     auto colorAttachment = pipelineDesc->colorAttachments()->object(0);
     colorAttachment->setPixelFormat(desc.colorFormat);
@@ -155,6 +162,17 @@ MTL::RenderPipelineState *PipelineCache::getDefault() {
         _defaultPipeline = getOrCreate(desc);
     }
     return _defaultPipeline;
+}
+
+MTL::RenderPipelineState* PipelineCache::getSkybox() {
+    if (!_skyboxPipeline) {
+        PipelineDesc desc;
+        desc.vertexFunction = "skyboxVertex";
+        desc.fragmentFunction = "skyboxFragment";
+        desc.hasVertexInput = false;
+        _skyboxPipeline = getOrCreate(desc);
+    }
+    return _skyboxPipeline;
 }
 
 } // namespace Paloma

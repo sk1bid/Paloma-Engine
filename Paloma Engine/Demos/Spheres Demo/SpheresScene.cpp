@@ -31,9 +31,15 @@ void SpheresScene::setup(Renderer *renderer) {
     _renderer = renderer;
     auto device = _renderer->context()->device();
     auto assetManager = _renderer->assetManager();
-    
+    _environmentBuffer = device->newBuffer(sizeof(EnvironmentData), MTL::ResourceStorageModeShared);
     // Load sphere mesh
     _sphereMesh = assetManager->getPrimitive("sphere");
+    
+    // Load skybox hdr texture
+    std::string pathSkyboxHDR = Bridge::getBundleResourcePath("kloppenheim_06_4k", "hdr");
+    auto hdrRes = assetManager->getHDRTexture(pathSkyboxHDR.c_str());
+    _skyboxTexture = hdrRes.texture;
+    _skyboxTextureIndex = hdrRes.bindlessIndex;
     
     // Add onyx mat
     MaterialArguments onyxMat = {};
@@ -43,11 +49,11 @@ void SpheresScene::setup(Renderer *renderer) {
     
     auto textureOnyx = assetManager->getTexture(texPathOnyx.c_str(), true);
     auto texOnyxNormal = assetManager->getTexture(pathOnyxNormal.c_str(), false);
-    auto texOnyxRoughness = assetManager->getTexture(pathOnyxRoughness.c_str(), false);
+    //auto texOnyxRoughness = assetManager->getTexture(pathOnyxRoughness.c_str(), false);
     
     onyxMat.baseColorTexture = textureOnyx.texture->gpuResourceID();
     onyxMat.normalTexture = texOnyxNormal.texture->gpuResourceID();
-    onyxMat.roughnessTexture = texOnyxRoughness.texture->gpuResourceID();
+    //onyxMat.roughnessTexture = texOnyxRoughness.texture->gpuResourceID();
     
     MaterialConstants onyxParams = {};
     onyxParams.metallicFactor = 0.0;
@@ -111,11 +117,28 @@ void SpheresScene::setup(Renderer *renderer) {
     // Setup camera
     _camera.position = {0.0f, 0.0f, 2.0f};
     _camera.target = {0.0f, 0.0f, 0.0f};
+    
+    printf("Skybox: texture=%p, index=%u\n", _skyboxTexture, _skyboxTextureIndex);
 }
 
 // Update (every frame)
 void SpheresScene::update(float dt) {
     auto view = _registry.view<TransformComponent>();
+    
+    float time = _renderer->totalTime();
+        float radius = 5.0f;
+        float height = 1.0f;
+        float speed = 0.3f;
+        
+        float theta = time * speed;
+        
+        _camera.position = simd_make_float3(
+            radius * sin(theta),
+            height + sin(theta) * 0.5f,
+            radius * cos(theta)
+        );
+        
+        _camera.target = simd_make_float3(0.0f, 0.0f, 0.0f);
     
     int index = 0;
     

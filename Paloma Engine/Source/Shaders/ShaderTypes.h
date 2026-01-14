@@ -40,8 +40,13 @@ enum VertexAttribute {
 struct FrameUniforms {
     simd_float4x4 viewMatrix;       // Camera
     simd_float4x4 projectionMatrix; // Projection
+    
+    simd_float4x4 viewMatrixInverse;
+    
+    simd_float4x4 projectionMatrixInverse;
     simd_float3 cameraPosition;
     float time; // for animation
+    uint64_t environmentAddress;
 };
 
 // -- instance data --
@@ -56,6 +61,14 @@ struct Vertex {
     simd_float3 position;
     simd_float3 normal;
     simd_float2 texcoord;
+};
+
+struct EnvironmentData {
+#ifdef __METAL__
+    metal::texture2d<float> skyboxTexture;
+#else
+    MTL::ResourceID skyboxTextureID;
+#endif
 };
 
 typedef struct {

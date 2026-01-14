@@ -15,13 +15,14 @@ namespace Paloma {
 
 // -- pipeline descriptor for caching
 struct PipelineDesc {
-  std::string vertexFunction = "vertexMain";
-  std::string fragmentFunction = "fragmentMain";
-  MTL::PixelFormat colorFormat = MTL::PixelFormatBGRA8Unorm_sRGB;
-  MTL::PixelFormat depthFormat = MTL::PixelFormatDepth32Float;
-
-  // hash for caching
-  size_t hash() const;
+    std::string vertexFunction = "vertexMain";
+    std::string fragmentFunction = "fragmentMain";
+    MTL::PixelFormat colorFormat = MTL::PixelFormatBGRA8Unorm_sRGB;
+    MTL::PixelFormat depthFormat = MTL::PixelFormatDepth32Float;
+    bool hasVertexInput = true;
+    
+    // hash for caching
+    size_t hash() const;
 };
 
 // -- cache compiled pipeline states --
@@ -29,21 +30,25 @@ struct PipelineDesc {
 
 class PipelineCache {
 public:
-  void init(MTL::Device *device, MTL4::Compiler *compiler);
-  void shutdown();
-
-  /// Get or Create pipeline
-  MTL::RenderPipelineState *getOrCreate(const PipelineDesc &desc);
-
-  /// Get default pipeline (for quick start)
-  MTL::RenderPipelineState *getDefault();
-
+    void init(MTL::Device *device, MTL4::Compiler *compiler);
+    void shutdown();
+    
+    /// Get or Create pipeline
+    MTL::RenderPipelineState *getOrCreate(const PipelineDesc &desc);
+    
+    /// Get default pipeline (for quick start)
+    MTL::RenderPipelineState *getDefault();
+    
+    MTL::RenderPipelineState* getSkybox();
+    
+    
 private:
-  MTL::Device *_device = nullptr;
-  MTL4::Compiler *_compiler = nullptr;
-  MTL::Library *_library = nullptr;
-
-  std::unordered_map<size_t, MTL::RenderPipelineState *> _cache;
-  MTL::RenderPipelineState *_defaultPipeline = nullptr;
+    MTL::Device *_device = nullptr;
+    MTL4::Compiler *_compiler = nullptr;
+    MTL::Library *_library = nullptr;
+    
+    std::unordered_map<size_t, MTL::RenderPipelineState *> _cache;
+    MTL::RenderPipelineState *_defaultPipeline = nullptr;
+    MTL::RenderPipelineState* _skyboxPipeline = nullptr;
 };
 } // namespace Paloma

@@ -46,6 +46,12 @@ bool Renderer::init(MTL::Device *device) {
     for (uint32_t i = 0; i < MaxFramesInFlight; i++) {
         residency->addAllocation(_uniformBuffers[i]);
     }
+    _environmentBuffer = _context.device()->newBuffer(
+        sizeof(EnvironmentData),
+        MTL::ResourceStorageModeShared
+    );
+    _environmentBuffer->setLabel(NS::String::string("EnvironmentBuffer", NS::UTF8StringEncoding));
+    residency->addAllocation(_environmentBuffer);
     residency->commit();
     
     // Depth state
@@ -55,11 +61,27 @@ bool Renderer::init(MTL::Device *device) {
     _depthState = _context.device()->newDepthStencilState(depthDesc);
     depthDesc->release();
     
+    // Skybox depth state
+    auto skyboxDepthDesc = MTL::DepthStencilDescriptor::alloc()->init();
+    skyboxDepthDesc->setDepthCompareFunction(MTL::CompareFunctionLessEqual);
+    skyboxDepthDesc->setDepthWriteEnabled(false);
+    _skyboxDepthState = _context.device()->newDepthStencilState(skyboxDepthDesc);
+    skyboxDepthDesc->release();
+    
+   
     return true;
 }
 
 // -- Shutdown --
 void Renderer::shutdown() {
+    if (_environmentBuffer) {
+        _environmentBuffer->release();
+        _environmentBuffer = nullptr;
+    }
+    if (_skyboxDepthState) {
+        _skyboxDepthState->release();
+        _skyboxDepthState = nullptr;
+    }
     if (_depthState) {
         _depthState->release();
         _depthState = nullptr;
@@ -94,6 +116,25 @@ void Renderer::setScene(Scene *scene){
 // -- Accessor --
 MTL4::ArgumentTable* Renderer::argumentTable() {
     return _context.argumentTable();
+}
+
+void Renderer::renderSkybox() {
+    auto skyboxPipeline = _pipelineCache.getSkybox();
+    if (!skyboxPipeline) return;
+    
+    _currentEncoder->setRenderPipelineState(skyboxPipeline);
+    
+    _currentEncoder->setDepthStencilState(_skyboxDepthState);
+    
+
+    _currentEncoder->setCullMode(MTL::CullModeNone);
+    
+    
+    _currentEncoder->drawPrimitives(MTL::PrimitiveTypeTriangle,
+                                     NS::UInteger(0),
+                                     NS::UInteger(3));
+    
+    _currentEncoder->setDepthStencilState(_depthState);
 }
 
 // --Render--
@@ -131,6 +172,14 @@ void Renderer::render(MTL4::RenderPassDescriptor *renderPass, CA::MetalDrawable 
         uniforms.viewMatrix = cam.viewMatrix();
         uniforms.projectionMatrix = cam.projectionMatrix();
         uniforms.cameraPosition = cam.position;
+        uniforms.viewMatrixInverse = simd_inverse(cam.viewMatrix());
+        uniforms.projectionMatrixInverse = simd_inverse(cam.projectionMatrix());
+        if (_currentScene->skyboxTexture()) {
+            EnvironmentData* envData = (EnvironmentData*)_environmentBuffer->contents();
+            envData->skyboxTextureID = _currentScene->skyboxTexture()->gpuResourceID();
+            
+            uniforms.environmentAddress = _environmentBuffer->gpuAddress();
+        }
     }
     
     uniforms.time = _totalTime;
@@ -144,6 +193,10 @@ void Renderer::render(MTL4::RenderPassDescriptor *renderPass, CA::MetalDrawable 
     // Render scene
     if (_currentScene) {
         _currentScene->render(this);
+        
+        if (_currentScene->skyboxTexture()){
+            renderSkybox();
+        }
     }
     
     // End
