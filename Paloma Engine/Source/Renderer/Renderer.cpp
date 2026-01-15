@@ -168,6 +168,8 @@ void Renderer::render(MTL4::RenderPassDescriptor *renderPass,
         uniforms.viewMatrixInverse = simd_inverse(cam.viewMatrix());
         uniforms.projectionMatrixInverse = simd_inverse(cam.projectionMatrix());
         if (_currentScene->skyboxTexture()) {
+            uniforms.iblIntensity = 0.15f;
+            uniforms.exposure = 1.2f;
             EnvironmentData *envData = (EnvironmentData *)_environmentBuffer->contents();
             
             envData->skyboxMapID = _currentScene->skyboxTexture()->gpuResourceID();

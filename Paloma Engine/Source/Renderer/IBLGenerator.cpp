@@ -40,7 +40,7 @@ IBLResource IBLGenerator::generate(
     result.environmentCubemap = createCubemap(device, cubemapSize, true);
     result.prefilteredMap = createCubemap(device, cubemapSize, true);
     result.brdfLut = createBRDFLut(device, 512);
-    result.shBuffer = device->newBuffer(27 * sizeof(float), MTL::ResourceStorageModeShared);
+    result.shBuffer = device->newBuffer(sizeof(SHCoefficients), MTL::ResourceStorageModeShared);
     memset(result.shBuffer->contents(), 0, 27 * sizeof(float));
     
     auto library = device->newDefaultLibrary();
@@ -105,14 +105,27 @@ IBLResource IBLGenerator::generate(
     MTL::Size threadgroupSize = MTL::Size::Make(8, 8, 1);
     encoder->dispatchThreads(gridSize, threadgroupSize);
     
+    encoder->barrierAfterEncoderStages(
+        MTL::StageDispatch,
+        MTL::StageDispatch,
+        MTL4::VisibilityOptionDevice
+    );
+    
     encoder->generateMipmaps(result.environmentCubemap);
     
-
+    encoder->barrierAfterEncoderStages(
+        MTL::StageBlit,
+        MTL::StageDispatch,
+        MTL4::VisibilityOptionDevice
+    );
+    
     encoder->copyFromTexture(
         result.environmentCubemap, 0, 0,
         result.prefilteredMap, 0, 0,
         6, 1
     );
+    
+    
     
     encoder->setComputePipelineState(prefilterPSO);
     NS::UInteger mipCount = result.prefilteredMap->mipmapLevelCount();
@@ -149,6 +162,12 @@ IBLResource IBLGenerator::generate(
     MTL::Size brdfGrid = MTL::Size::Make(brdfSize, brdfSize, 1);
     MTL::Size brdfThreadgroup = MTL::Size::Make(8, 8, 1);
     encoder->dispatchThreads(brdfGrid, brdfThreadgroup);
+    
+    encoder->barrierAfterEncoderStages(
+        MTL::StageDispatch | MTL::StageBlit,
+        MTL::StageDispatch,
+        MTL4::VisibilityOptionDevice
+    );
     
     encoder->setComputePipelineState(shPSO);
     uint32_t sizeParam = cubemapSize;

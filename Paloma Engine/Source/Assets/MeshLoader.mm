@@ -144,8 +144,8 @@ Mesh *loadPrimitive(MTL::Device *device, const char *name) {
                                     allocator:allocator];
     } else if ([primName isEqualToString:@"sphere"]) {
       mdlMesh = [MDLMesh newEllipsoidWithRadii:(vector_float3){0.5, 0.5, 0.5}
-                                radialSegments:50
-                              verticalSegments:32
+                                radialSegments:200
+                              verticalSegments:200
                                   geometryType:MDLGeometryTypeTriangles
                                  inwardNormals:NO
                                     hemisphere:NO

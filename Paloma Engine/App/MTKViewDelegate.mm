@@ -14,7 +14,7 @@
 
 @implementation PalomaViewDelegate {
     Paloma::Renderer* _renderer;
-    Paloma::SpheresScene* _scene;
+    Paloma::Scene* _scene;
     
     CFTimeInterval _lastFrameTime;
 }

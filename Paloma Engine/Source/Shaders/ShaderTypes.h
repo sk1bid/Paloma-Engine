@@ -59,6 +59,8 @@ struct FrameUniforms {
     simd_float4x4 projectionMatrixInverse;
     simd_float3 cameraPosition;
     float time; // for animation
+    float iblIntensity;
+    float exposure;
     uint64_t environmentAddress;
     SHCoefficients sh;
 };
@@ -90,13 +92,18 @@ struct EnvironmentData {
 };
 typedef struct {
     simd_float4 baseColorFactor;
-    float opacityFactor;
-    float normalScale;
-    float occlusionStrength;
+    simd_float4 emissiveFactor;
     float metallicFactor;
     float roughnessFactor;
-    simd_float3 emissiveFactor;
+    float normalScale;
+    float occlusionStrength;
+    float opacityFactor;
     float alphaCutoff;
+    
+    uint32_t hasBaseColorTexture;
+    uint32_t hasNormalTexture;
+    uint32_t hasRoughnessTexture;
+    uint32_t hasMetalnessTexture;
 } MaterialConstants;
 
 typedef struct {

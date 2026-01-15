@@ -7,6 +7,7 @@
 
 #pragma once
 #include <Metal/Metal.hpp>
+#include "ShaderTypes.h"
 #include <string>
 
 namespace Paloma {

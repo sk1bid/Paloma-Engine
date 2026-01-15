@@ -54,6 +54,25 @@
 		39340D882F174BCC00005B7A /* Post Processor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Post Processor.xcodeproj"; sourceTree = "<group>"; };
 		39340DB02F174BCC00005B7A /* Metal4Basics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Metal4Basics.xcodeproj; sourceTree = "<group>"; };
 		39340DD62F174BCC00005B7A /* Metal4Basics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Metal4Basics.xcodeproj; sourceTree = "<group>"; };
+		39341B8C2F1882B900005B7A /* example_apple_metal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = example_apple_metal.xcodeproj; sourceTree = "<group>"; };
+		39341B912F1882B900005B7A /* example_apple_opengl2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = example_apple_opengl2.xcodeproj; sourceTree = "<group>"; };
+		39341F232F1882B900005B7A /* WidgetFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = WidgetFramework.xcodeproj; sourceTree = "<group>"; };
+		39341F292F1882B900005B7A /* gtest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = gtest.xcodeproj; sourceTree = "<group>"; };
+		393421F62F1882A500005B7A /* backend-test.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "backend-test.xcodeproj"; sourceTree = "<group>"; };
+		3934220B2F1882A500005B7A /* gltf-viewer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "gltf-viewer.xcodeproj"; sourceTree = "<group>"; };
+		3934221D2F1882A500005B7A /* HelloCocoaPods.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HelloCocoaPods.xcodeproj; sourceTree = "<group>"; };
+		3934225C2F1882A500005B7A /* hello-ar.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "hello-ar.xcodeproj"; sourceTree = "<group>"; };
+		393422772F1882A500005B7A /* hello-gltf.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "hello-gltf.xcodeproj"; sourceTree = "<group>"; };
+		393422912F1882A500005B7A /* hello-pbr.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "hello-pbr.xcodeproj"; sourceTree = "<group>"; };
+		393422A62F1882A500005B7A /* hello-triangle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "hello-triangle.xcodeproj"; sourceTree = "<group>"; };
+		393422C42F1882A500005B7A /* transparent-rendering.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "transparent-rendering.xcodeproj"; sourceTree = "<group>"; };
+		39342A4B2F1882B900005B7A /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = SDL.xcodeproj; sourceTree = "<group>"; };
+		39342A4D2F1882B900005B7A /* SDLTest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = SDLTest.xcodeproj; sourceTree = "<group>"; };
+		39342A6B2F1882B900005B7A /* Demos.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Demos.xcodeproj; sourceTree = "<group>"; };
+		39342A712F1882B900005B7A /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = SDL.xcodeproj; sourceTree = "<group>"; };
+		39342A732F1882B900005B7A /* SDL2test.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = SDL2test.xcodeproj; sourceTree = "<group>"; };
+		39342A752F1882B900005B7A /* ___PROJECTNAME___.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "___PROJECTNAME___.xcodeproj"; sourceTree = "<group>"; };
+		39342A7F2F1882B900005B7A /* TestiPhoneOS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = TestiPhoneOS.xcodeproj; sourceTree = "<group>"; };
 		395201102F0BCD7500B8242A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		395201122F0BCD7A00B8242A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		395201142F0BCD7F00B8242A /* MetalFX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalFX.framework; path = System/Library/Frameworks/MetalFX.framework; sourceTree = SDKROOT; };
@@ -349,6 +368,139 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		393422252F1882A500005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		393422272F1882A500005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		393422292F1882A500005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		393422A92F1882A500005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		393422AB2F1882A500005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		393422AD2F1882A500005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		393422AF2F1882A500005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		393422C62F1882A500005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342A9F2F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342AA12F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342AA32F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342AA52F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342AA72F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342AA92F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342AAB2F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342AAD2F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342AAF2F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342AB12F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		39342AB32F1882B900005B7A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		3952010F2F0BCD7500B8242A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -462,8 +614,16 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 39342AB12F1882B900005B7A /* Products */;
+					ProjectRef = 39342A752F1882B900005B7A /* ___PROJECTNAME___.xcodeproj */;
+				},
+				{
 					ProductGroup = 39340E182F174BCC00005B7A /* Products */;
 					ProjectRef = 393407D42F174BCC00005B7A /* ArgumentBufferArraysWithHeaps.xcodeproj */;
+				},
+				{
+					ProductGroup = 393422272F1882A500005B7A /* Products */;
+					ProjectRef = 393421F62F1882A500005B7A /* backend-test.xcodeproj */;
 				},
 				{
 					ProductGroup = 39340E1C2F174BCC00005B7A /* Products */;
@@ -494,6 +654,10 @@
 					ProjectRef = 393409852F174BCC00005B7A /* Deferred Lighting (Swift).xcodeproj */;
 				},
 				{
+					ProductGroup = 39342AA12F1882B900005B7A /* Products */;
+					ProjectRef = 39342A6B2F1882B900005B7A /* Demos.xcodeproj */;
+				},
+				{
 					ProductGroup = 39340E122F174BCC00005B7A /* Products */;
 					ProjectRef = 393407172F174BCC00005B7A /* DepthTesting.xcodeproj */;
 				},
@@ -504,6 +668,14 @@
 				{
 					ProductGroup = 39340E042F174BCC00005B7A /* Products */;
 					ProjectRef = 393408342F174BCC00005B7A /* DynamicTerrainWithArgumentBuffers.xcodeproj */;
+				},
+				{
+					ProductGroup = 39342A9F2F1882B900005B7A /* Products */;
+					ProjectRef = 39341B8C2F1882B900005B7A /* example_apple_metal.xcodeproj */;
+				},
+				{
+					ProductGroup = 39342AA72F1882B900005B7A /* Products */;
+					ProjectRef = 39341B912F1882B900005B7A /* example_apple_opengl2.xcodeproj */;
 				},
 				{
 					ProductGroup = 39340DEE2F174BCC00005B7A /* Products */;
@@ -518,8 +690,36 @@
 					ProjectRef = 39340BDE2F174BCC00005B7A /* FramePacing.xcodeproj */;
 				},
 				{
+					ProductGroup = 393422292F1882A500005B7A /* Products */;
+					ProjectRef = 3934220B2F1882A500005B7A /* gltf-viewer.xcodeproj */;
+				},
+				{
+					ProductGroup = 39342AAF2F1882B900005B7A /* Products */;
+					ProjectRef = 39341F292F1882B900005B7A /* gtest.xcodeproj */;
+				},
+				{
 					ProductGroup = 39340E022F174BCC00005B7A /* Products */;
 					ProjectRef = 393406612F174BCC00005B7A /* Hello Triangle.xcodeproj */;
+				},
+				{
+					ProductGroup = 393422AB2F1882A500005B7A /* Products */;
+					ProjectRef = 3934225C2F1882A500005B7A /* hello-ar.xcodeproj */;
+				},
+				{
+					ProductGroup = 393422A92F1882A500005B7A /* Products */;
+					ProjectRef = 393422772F1882A500005B7A /* hello-gltf.xcodeproj */;
+				},
+				{
+					ProductGroup = 393422AD2F1882A500005B7A /* Products */;
+					ProjectRef = 393422912F1882A500005B7A /* hello-pbr.xcodeproj */;
+				},
+				{
+					ProductGroup = 393422AF2F1882A500005B7A /* Products */;
+					ProjectRef = 393422A62F1882A500005B7A /* hello-triangle.xcodeproj */;
+				},
+				{
+					ProductGroup = 393422252F1882A500005B7A /* Products */;
+					ProjectRef = 3934221D2F1882A500005B7A /* HelloCocoaPods.xcodeproj */;
 				},
 				{
 					ProductGroup = 39340DF42F174BCC00005B7A /* Products */;
@@ -586,6 +786,22 @@
 					ProjectRef = 393409D62F174BCC00005B7A /* ReflectionsWithLayerSelection.xcodeproj */;
 				},
 				{
+					ProductGroup = 39342AA52F1882B900005B7A /* Products */;
+					ProjectRef = 39342A4B2F1882B900005B7A /* SDL.xcodeproj */;
+				},
+				{
+					ProductGroup = 39342AA92F1882B900005B7A /* Products */;
+					ProjectRef = 39342A712F1882B900005B7A /* SDL.xcodeproj */;
+				},
+				{
+					ProductGroup = 39342AAB2F1882B900005B7A /* Products */;
+					ProjectRef = 39342A732F1882B900005B7A /* SDL2test.xcodeproj */;
+				},
+				{
+					ProductGroup = 39342AB32F1882B900005B7A /* Products */;
+					ProjectRef = 39342A4D2F1882B900005B7A /* SDLTest.xcodeproj */;
+				},
+				{
 					ProductGroup = 39340DDA2F174BCC00005B7A /* Products */;
 					ProjectRef = 39340A552F174BCC00005B7A /* SimplePathTracer.xcodeproj */;
 				},
@@ -594,12 +810,24 @@
 					ProjectRef = 39340B832F174BCC00005B7A /* SparseTextures.xcodeproj */;
 				},
 				{
+					ProductGroup = 39342AAD2F1882B900005B7A /* Products */;
+					ProjectRef = 39342A7F2F1882B900005B7A /* TestiPhoneOS.xcodeproj */;
+				},
+				{
 					ProductGroup = 39340E0C2F174BCC00005B7A /* Products */;
 					ProjectRef = 393406D32F174BCC00005B7A /* Texture Compute.xcodeproj */;
 				},
 				{
+					ProductGroup = 393422C62F1882A500005B7A /* Products */;
+					ProjectRef = 393422C42F1882A500005B7A /* transparent-rendering.xcodeproj */;
+				},
+				{
 					ProductGroup = 39340DDE2F174BCC00005B7A /* Products */;
 					ProjectRef = 3934085B2F174BCC00005B7A /* VisibilityResultBuffer.xcodeproj */;
+				},
+				{
+					ProductGroup = 39342AA32F1882B900005B7A /* Products */;
+					ProjectRef = 39341F232F1882B900005B7A /* WidgetFramework.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -870,6 +1098,14 @@
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/tools/clang/test/Frontend/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/tools/clang/test/Index/Inputs/Frameworks",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/tools/clang/test/Preprocessor/Inputs/headermap-rel",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/tools/clang/test/Preprocessor/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/tools/clang/test/VFS/Inputs",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
@@ -877,6 +1113,14 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/test/Object/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/test/tools/dsymutil/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/test/tools/llvm-cov/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/test/tools/llvm-objdump/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/test/tools/llvm-objdump/X86/Inputs",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.1;
 				MARKETING_VERSION = 1.0;
@@ -900,6 +1144,14 @@
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/tools/clang/test/Frontend/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/tools/clang/test/Index/Inputs/Frameworks",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/tools/clang/test/Preprocessor/Inputs/headermap-rel",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/tools/clang/test/Preprocessor/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/tools/clang/test/VFS/Inputs",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
@@ -907,6 +1159,14 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/test/Object/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/test/tools/dsymutil/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/test/tools/llvm-cov/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/test/tools/llvm-objdump/Inputs",
+					"$(PROJECT_DIR)/Docs/filament-main/third_party/dawn/third_party/dxc/test/tools/llvm-objdump/X86/Inputs",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.1;
 				MARKETING_VERSION = 1.0;

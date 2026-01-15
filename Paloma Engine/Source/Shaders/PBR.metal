@@ -28,27 +28,15 @@ float2x3 cotangents(float3 N, float3 p, float2 uv) {
 
 // Evaluate SH irradiance at direction n
 float3 evaluateSHIrradiance(float3 n, constant SHCoefficients& sh) {
-    // Константы, объединяющие Ylm и Al (Lambertian convolution)
-    const float C1 = 0.429043;
-    const float C2 = 0.511664;
-    const float C3 = 0.743125;
-    const float C4 = 0.886227;
-    const float C5 = 0.247708;
-
-    // Реконструкция по формуле Рамамурти-Ханрахана
-    float3 irradiance =
-        C4 * sh.L00 -
-        C5 * sh.L20 +
-        C3 * sh.L20 * n.z * n.z +
-        C1 * sh.L22 * (n.x * n.x - n.y * n.y) +
-        C1 * sh.L2m2 * n.x * n.y +
-        C1 * sh.L21 * n.x * n.z +
-        C1 * sh.L2m1 * n.y * n.z +
-        C2 * sh.L11 * n.x +
-        C2 * sh.L1m1 * n.y +
-        C2 * sh.L10 * n.z;
-
-    return max(float3(0.0), irradiance);
+    return sh.L00
+         + sh.L1m1 * n.y
+         + sh.L10  * n.z
+         + sh.L11  * n.x
+         + sh.L2m2 * (n.x * n.y)
+         + sh.L2m1 * (n.y * n.z)
+         + sh.L20  * (3.0 * n.z * n.z - 1.0)
+         + sh.L21  * (n.x * n.z)
+         + sh.L22  * (n.x * n.x - n.y * n.y);
 }
 // -- Texture Sampler --
 constexpr sampler textureSampler(filter::linear, mip_filter::linear, address::repeat);
@@ -73,6 +61,10 @@ float visibilityGGX(float NdotL, float NdotV, float alphaRoughness) {
 // F - Fresnel Schlick
 float3 fresnelSchlick(float3 f0, float VdotH) {
     return f0 + (1.0f - f0) * pow(clamp(1.0f - VdotH, 0.0f, 1.0f), 5.0f);
+}
+
+float3 fresnelSchlickRoughness(float3 F0, float cosTheta, float roughness) {
+    return F0 + (max(float3(1.0 - roughness), F0) - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 
 // -- Transfer Data Structures --
@@ -148,7 +140,10 @@ fragment float4 fragmentMain (
     
     // Normal mapping
     float2x3 TB = cotangents(in.normal, in.worldPos, in.texcoord);
-    float3 nt = material.normalTexture.sample(textureSampler, in.texcoord).rgb * 2.0 - 1.0;
+    float3 nt = float3(0.0, 0.0, 1.0);
+    if (material.constants.hasNormalTexture) {
+        nt = material.normalTexture.sample(textureSampler, in.texcoord).rgb * 2.0 - 1.0;
+    }
     float3 N = normalize(TB[0] * nt.x + TB[1] * nt.y + in.normal * nt.z);
     
     // Reflection vector for IBL
@@ -157,17 +152,20 @@ fragment float4 fragmentMain (
     // -- Material Properties --
     
     float metallic = material.constants.metallicFactor;
-    if (material.metalnessTexture.get_width() > 0) {
+    if (material.constants.hasMetalnessTexture) {
         metallic *= material.metalnessTexture.sample(textureSampler, in.texcoord).r;
     }
     
     float roughness = material.constants.roughnessFactor;
-    if (material.roughnessTexture.get_width() > 0) {
+    if (material.constants.hasRoughnessTexture) {
         roughness *= material.roughnessTexture.sample(textureSampler, in.texcoord).r;
     }
     roughness = clamp(roughness, 0.05f, 1.0f);
     
-    float3 albedo = material.baseColorTexture.sample(textureSampler, in.texcoord).rgb;
+    float3 albedo = material.constants.baseColorFactor.rgb;
+    if (material.constants.hasBaseColorTexture) {
+        albedo *= material.baseColorTexture.sample(textureSampler, in.texcoord).rgb;
+    }
     
     float3 F0 = mix(float3(0.04), albedo, metallic);
     
@@ -187,7 +185,7 @@ fragment float4 fragmentMain (
     float3 kD = (float3(1.0) - F) * (1.0 - metallic);
     float3 diffuseDirect = kD * albedo / M_PI_F;
     
-    float3 directLighting = (diffuseDirect + specularDirect) * NdotL * 3.0;
+    float3 directLighting = (diffuseDirect + specularDirect) * NdotL;
     
     // -- IBL --
     
@@ -195,30 +193,37 @@ fragment float4 fragmentMain (
     constexpr sampler lutSampler(filter::linear);
     
     // Specular IBL
-    float lod = roughness * float(env.prefilteredMap.get_num_mip_levels() - 1);
-    float3 prefilteredColor = env.prefilteredMap.sample(cubeSampler, R, level(lod)).rgb;
-    
-    // BRDF LUT
+    float3 kS = fresnelSchlickRoughness(F0, NdotV, roughness);
+    float maxLod = float(env.prefilteredMap.get_num_mip_levels() - 1);
+    float lod = maxLod * roughness * (2.0 - roughness);
+    float3 prefilteredColor = env.prefilteredMap
+        .sample(cubeSampler, R, level(lod)).rgb;
+
     float2 brdf = env.brdfLut.sample(lutSampler, float2(NdotV, roughness)).rg;
-    float3 specularIBL = prefilteredColor * (F0 * brdf.x + brdf.y);
-    
-    
+    float3 specularIBL = prefilteredColor * (kS * brdf.x + brdf.y);
+
     // Diffuse IBL
-    float3 irradiance = evaluateSHIrradiance(N, uniforms.sh);
-    float3 diffuseIBL = albedo * irradiance / M_PI_F;
+    float3 E = F0 * brdf.x + brdf.y;
+    float3 kD_ibl = (1.0 - E) * (1.0 - metallic);
+    float3 irradiance = evaluateSHIrradiance(N, uniforms.sh) * uniforms.iblIntensity;
+    float3 diffuseIBL = kD_ibl * albedo * irradiance;
+
+    // Combine
+    float3 ambientLighting = specularIBL + diffuseIBL;
     
-    // Combine IBL
-    float3 ambientLighting = specularIBL + diffuseIBL * (1.0 - metallic);
     
-    // ========================================
-    // 7. FINAL COMPOSITION
-    // ========================================
     
-    float3 finalColor = directLighting + ambientLighting;
-    
+    // -- Debug --
+    //return float4(N * 0.5 + 0.5, 1.0);
+    //return float4(albedo, 1.0);
+    //return float4(float3(roughness), 1.0);
+    //return float4(directLighting, 1.0);
+    //return float4(diffuseIBL, 1.0);
+    //return float4(irradiance * 0.1, 1.0);
+    //return float4(specularIBL, 1.0);
+    float3 finalColor = (directLighting + ambientLighting) * uniforms.exposure;;
     // Tonemapping
     float3 mapped = ToneMapACES(finalColor);
-    
     // Gamma correction
     return float4(pow(mapped, float3(1.0/2.2)), 1.0);
 }

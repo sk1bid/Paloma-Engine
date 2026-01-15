@@ -30,11 +30,12 @@ private:
     Renderer* _renderer;
     
     // Resources
-    Mesh *_sphereMesh = nullptr;
+    Mesh *_monkeyMesh = nullptr;
     
     
     uint64_t _metalMatAddress = 0;
     uint64_t _fabricMatAddress = 0;
+    uint64_t _simpleMatAddress = 0;
 
     MTL::Buffer *_instanceBuffers[MaxFramesInFlight] = {};
     

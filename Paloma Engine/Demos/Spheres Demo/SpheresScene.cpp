@@ -23,7 +23,7 @@ void SpheresScene::cleanup() {
         }
     }
     
-    _sphereMesh = nullptr;
+    _monkeyMesh = nullptr;
 }
 
 // -- Setup Scene (once) --
@@ -33,10 +33,12 @@ void SpheresScene::setup(Renderer *renderer) {
     auto assetManager = _renderer->assetManager();
     _environmentBuffer = device->newBuffer(sizeof(EnvironmentData), MTL::ResourceStorageModeShared);
     // Load sphere mesh
-    _sphereMesh = assetManager->getPrimitive("box");
+    std::string monkeyPath = Bridge::getBundleResourcePath("monkey", "obj");
+    _monkeyMesh = assetManager->getMesh(monkeyPath.c_str());;
     
     // Load skybox hdr texture
     std::string pathSkyboxHDR = Bridge::getBundleResourcePath("kloppenheim_06_4k", "hdr");
+    //std::string pathSkyboxHDR = Bridge::getBundleResourcePath("Beach", "hdr");
     auto hdrRes = assetManager->getHDRTexture(pathSkyboxHDR.c_str());
     
     auto iblAllocator = device->newCommandAllocator();
@@ -50,30 +52,30 @@ void SpheresScene::setup(Renderer *renderer) {
     iblAllocator->release();
     _skyboxTexture = _iblResource.environmentCubemap;
     
-    // Add metal mat
-    MaterialArguments metalMat = {};
-    std::string pathMetalColor = Bridge::getBundleResourcePath("storage-container2-albedo", "png");
-    std::string pathMetalNormal = Bridge::getBundleResourcePath("storage-container2-normal-ogl", "png");
-    std::string pathMetalRoughness = Bridge::getBundleResourcePath("storage-container2-roughness", "png");
-    std::string pathMetalMetalness = Bridge::getBundleResourcePath("storage-container2-metallic", "png");
-    
-    auto texMetalColor = assetManager->getTexture(pathMetalColor.c_str(), true);
-    auto texMetalNormal = assetManager->getTexture(pathMetalNormal.c_str(), false);
-    auto texMetalRoughness = assetManager->getTexture(pathMetalRoughness.c_str(),false);
-    auto texMetalMetalness = assetManager->getTexture(pathMetalMetalness.c_str(), false);
-    
-    metalMat.baseColorTexture = texMetalColor.texture->gpuResourceID();
-    metalMat.normalTexture = texMetalNormal.texture->gpuResourceID();
-    metalMat.roughnessTexture = texMetalRoughness.texture->gpuResourceID();
-    metalMat.metalnessTexture = texMetalMetalness.texture->gpuResourceID();
-    
-    MaterialConstants metalParams = {};
-    metalParams.metallicFactor = 1;
-    metalParams.roughnessFactor = 1;
-    metalMat.constants = metalParams;
-    
-    _metalMatAddress = assetManager->createMaterial("Metal", metalMat);
-    
+//    // Add metal mat
+//    MaterialArguments metalMat = {};
+//    std::string pathMetalColor = Bridge::getBundleResourcePath("storage-container2-albedo", "png");
+//    std::string pathMetalNormal = Bridge::getBundleResourcePath("storage-container2-normal-ogl", "png");
+//    std::string pathMetalRoughness = Bridge::getBundleResourcePath("storage-container2-roughness", "png");
+//    std::string pathMetalMetalness = Bridge::getBundleResourcePath("storage-container2-metallic", "png");
+//    
+//    auto texMetalColor = assetManager->getTexture(pathMetalColor.c_str(), true);
+//    auto texMetalNormal = assetManager->getTexture(pathMetalNormal.c_str(), false);
+//    auto texMetalRoughness = assetManager->getTexture(pathMetalRoughness.c_str(),false);
+//    auto texMetalMetalness = assetManager->getTexture(pathMetalMetalness.c_str(), false);
+//    
+//    metalMat.baseColorTexture = texMetalColor.texture->gpuResourceID();
+//    metalMat.normalTexture = texMetalNormal.texture->gpuResourceID();
+//    metalMat.roughnessTexture = texMetalRoughness.texture->gpuResourceID();
+//    metalMat.metalnessTexture = texMetalMetalness.texture->gpuResourceID();
+//    
+//    MaterialConstants metalParams = {};
+//    metalParams.metallicFactor = 1;
+//    metalParams.roughnessFactor = 1;
+//    metalMat.constants = metalParams;
+//    
+//    _metalMatAddress = assetManager->createMaterial("Metal", metalMat);
+//    
     // Add fabric material
     MaterialArguments fabricMat = {};
     std::string texPathFabric = Bridge::getBundleResourcePath("Fabric080_2K-PNG_Color", "png");
@@ -85,8 +87,13 @@ void SpheresScene::setup(Renderer *renderer) {
     auto texFabricRoughness = assetManager->getTexture(pathFabricRoughness.c_str(),
                                                        false);
     MaterialConstants fabricParams = {};
+    fabricParams.baseColorFactor = simd_float4{1, 1, 1, 1};
     fabricParams.metallicFactor = 0.0;
     fabricParams.roughnessFactor = 1.0;
+    fabricParams.hasNormalTexture = 1;
+    fabricParams.hasBaseColorTexture = 1;
+    fabricParams.hasRoughnessTexture = 1;
+    fabricParams.hasMetalnessTexture = 0;
     fabricMat.constants = fabricParams;
     
     fabricMat.baseColorTexture = textureFabric.texture->gpuResourceID();
@@ -95,11 +102,23 @@ void SpheresScene::setup(Renderer *renderer) {
     
     _fabricMatAddress = assetManager->createMaterial("Fabric", fabricMat);
     
+    MaterialArguments simpleMat = {};
+    MaterialConstants simpleConstants = {};
+    simpleConstants.baseColorFactor = simd_float4{1,1,1,1};
+    simpleConstants.metallicFactor = 1.0;
+    simpleConstants.roughnessFactor = 0.05;
+    simpleConstants.hasBaseColorTexture = 0;
+    simpleConstants.hasNormalTexture = 0;
+    simpleConstants.hasRoughnessTexture = 0;
+    simpleConstants.hasMetalnessTexture = 0;
+    simpleMat.constants = simpleConstants;
+    _simpleMatAddress  = assetManager->createMaterial("Simple", simpleMat);
+    
     
     for (int i = 0; i < kInstanceCount; i++) {
         auto entity = _registry.create();
         
-        float x = (i - 2) * 1.5f;
+        float x = (i - 2) * 2.0f;
         _registry.emplace<TransformComponent>(entity, vector_float3{x, 0, 0}, // pos
                                               vector_float3{0, 0, 0},// rot
                                               vector_float3{1, 1, 1} // scale
@@ -107,8 +126,8 @@ void SpheresScene::setup(Renderer *renderer) {
         
         
         _registry.emplace<MeshComponent>(entity,
-                                         _sphereMesh,
-                                         _fabricMatAddress);
+                                         _monkeyMesh,
+                                         _simpleMatAddress);
         
         
     }
@@ -175,18 +194,21 @@ void SpheresScene::update(float dt) {
         float wave = sinf(_renderer->totalTime() * 2.0f + index * 0.8f);
         
         if (wave > 0) {
-           // m.materialAddress = _fabricMatAddress;
+           m.materialAddress = _fabricMatAddress;
         } else {
-            m.materialAddress = _metalMatAddress;
+           m.materialAddress = _simpleMatAddress;
         }
         index++;
+        
     });
+    
+    
 }
 
 // Render (every frame) --
 
 void SpheresScene::render(Renderer *renderer) {
-    if (!_sphereMesh)
+    if (!_monkeyMesh)
         return;
     
     auto encoder = renderer->currentEncoder();
@@ -234,12 +256,12 @@ void SpheresScene::render(Renderer *renderer) {
     // Bind instance buffers
     argTable->setAddress(_instanceBuffers[frameIndex]->gpuAddress(), BufferIndexInstanceData);
     
-    argTable->setAddress(_sphereMesh->vertexAddress(), BufferIndexVertices);
+    argTable->setAddress(_monkeyMesh->vertexAddress(), BufferIndexVertices);
     
-    for (const auto &submesh : _sphereMesh->submeshes()) {
+    for (const auto &submesh : _monkeyMesh->submeshes()) {
         encoder->drawIndexedPrimitives(
                                        MTL::PrimitiveTypeTriangle, submesh.indexCount, submesh.indexType,
-                                       _sphereMesh->indexAdress(), _sphereMesh->indexBuffer()->length(),
+                                       _monkeyMesh->indexAdress(), _monkeyMesh->indexBuffer()->length(),
                                        instanceCount);
     }
 }
