@@ -74,8 +74,9 @@ struct InstanceData {
 
 // -- Vertex for procedural mesh ---
 struct Vertex {
-    simd_float3 position;
+    simd_float4 position;
     simd_float3 normal;
+    simd_float4 tangent;
     simd_float2 texcoord;
 };
 

@@ -12,20 +12,6 @@
 
 using namespace metal;
 
-// -- Helpers --
-float2x3 cotangents(float3 N, float3 p, float2 uv) {
-    float3 dp1 = dfdx(p);
-    float3 dp2 = dfdy(p);
-    float2 duv1 = dfdx(uv);
-    float2 duv2 = dfdy(uv);
-    float3 dp2perp = cross(dp2, N);
-    float3 dp1perp = cross(N, dp1);
-    float3 T = dp2perp * duv1.x + dp1perp * duv2.x;
-    float3 B = dp2perp * -duv1.y + dp1perp * -duv2.y;
-    float invmax = rsqrt(max(dot(T, T), dot(B, B)));
-    return float2x3(T * invmax, B * invmax);
-}
-
 // Evaluate SH irradiance at direction n
 float3 evaluateSHIrradiance(float3 n, constant SHCoefficients& sh) {
     return sh.L00
@@ -70,16 +56,17 @@ float3 fresnelSchlickRoughness(float3 F0, float cosTheta, float roughness) {
 // -- Transfer Data Structures --
 
 struct VertexIn {
-    packed_float3 position;
+    packed_float4 position;
     packed_float3 normal;
-    float2 texcoord;
-    
+    packed_float4 tangent;
+    packed_float2 texcoord;
 };
 
 struct VertexOut {
     float4 position [[position]]; // clip space position
     float3 worldPos; // for lightning
     float3 normal;
+    float4 tangent;
     float2 texcoord; // UV for textures
     uint instanceID [[flat]];
 };
@@ -97,13 +84,13 @@ vertex VertexOut vertexMain(
     VertexOut out;
     VertexIn in_packed = vertices[vid];
     
-    float3 position = float3(in_packed.position);
+    float4 position = float4(in_packed.position);
     float3 normal = float3(in_packed.normal);
     
     InstanceData inst = instances[instanceID];
     // Transform vertex position using model matrix
     /// Transfer object from local space (0,0,0) to World position
-    float4 worldPos = inst.modelMatrix * float4(position, 1.0);
+    float4 worldPos = inst.modelMatrix * float4(position);
     
     // Normal direction (perpendicular to surface)
     /// Normals shoud rotate with object for correct lighting
@@ -115,6 +102,8 @@ vertex VertexOut vertexMain(
     
     out.worldPos = worldPos.xyz;
     out.normal = normalize(worldNormal);
+    out.tangent = float4((inst.normalMatrix * float4(float3(in_packed.tangent.xyz), 0.0)).xyz,
+                         in_packed.tangent.w);
     out.texcoord = in_packed.texcoord;
     out.instanceID = instanceID;
     
@@ -139,12 +128,15 @@ fragment float4 fragmentMain (
     float3 H = normalize(V + L);
     
     // Normal mapping
-    float2x3 TB = cotangents(in.normal, in.worldPos, in.texcoord);
+    float3 T = normalize(in.tangent.xyz);
+    float3 N_geom = normalize(in.normal);
+    float3 B = cross(N_geom, T) * in.tangent.w;
+
     float3 nt = float3(0.0, 0.0, 1.0);
     if (material.constants.hasNormalTexture) {
         nt = material.normalTexture.sample(textureSampler, in.texcoord).rgb * 2.0 - 1.0;
     }
-    float3 N = normalize(TB[0] * nt.x + TB[1] * nt.y + in.normal * nt.z);
+    float3 N = normalize(T * nt.x + B * nt.y + N_geom * nt.z);
     
     // Reflection vector for IBL
     float3 R = reflect(-V, N);
