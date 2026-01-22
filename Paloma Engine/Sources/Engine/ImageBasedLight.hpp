@@ -16,40 +16,39 @@
 
 class ImageBasedLight {
 public:
-  NS::SharedPtr<MTL::Texture> diffuseCubeTexture;
-  NS::SharedPtr<MTL::Texture> specularCubeTexture;
-  int specularMipLevelCount;
-  NS::SharedPtr<MTL::Texture> scaleAndBiasLookupTexture;
-  NS::SharedPtr<MTL::Event> readyEvent;
-
-  simd::float3x3 rotation = matrix_identity_float3x3;
-  float intensity = 1.0f;
-
-  ImageBasedLight(NS::SharedPtr<MTL::Texture> diffuseCubeTexture,
-                  NS::SharedPtr<MTL::Texture> specularCubeTexture, int specularMipLevelCount,
-                  NS::SharedPtr<MTL::Texture> scaleAndBiasLookupTexture,
-                  NS::SharedPtr<MTL::Event> readyEvent);
-
-  static void generateImageBasedLight(
-      const std::string &url, MTL::Device *pDevice,
-      std::function<void(ImageBasedLight *, NS::Error *)> completion);
+    NS::SharedPtr<MTL::Texture> diffuseCubeTexture;
+    NS::SharedPtr<MTL::Texture> specularCubeTexture;
+    int specularMipLevelCount;
+    NS::SharedPtr<MTL::Texture> scaleAndBiasLookupTexture;
+    NS::SharedPtr<MTL::SharedEvent> readyEvent;
+    
+    simd::float3x3 rotation = matrix_identity_float3x3;
+    float intensity = 1.0f;
+    
+    ImageBasedLight(NS::SharedPtr<MTL::Texture> diffuseCubeTexture,
+                    NS::SharedPtr<MTL::Texture> specularCubeTexture, int specularMipLevelCount,
+                    NS::SharedPtr<MTL::Texture> scaleAndBiasLookupTexture,
+                    NS::SharedPtr<MTL::SharedEvent> readyEvent);
+    
+    static void generateImageBasedLight(
+                                        const std::string &url, MTL::Device *pDevice,
+                                        std::function<void(ImageBasedLight *, NS::Error *)> completion);
 };
 
 class ImageBasedLightGenerator {
 public:
-  NS::SharedPtr<MTL::Device> _pDevice;
-  NS::SharedPtr<MTL::CommandQueue> _pCommandQueue;
-
-  NS::SharedPtr<MTL::ComputePipelineState> _pEquirectToCubePSO;
-  NS::SharedPtr<MTL::ComputePipelineState> _pLookupTablePSO;
-  NS::SharedPtr<MTL::ComputePipelineState> _pPrefilteringPSO;
-
+    NS::SharedPtr<MTL::Device> _pDevice;
+    NS::SharedPtr<MTL::CommandQueue> _pCommandQueue;
+    
+    NS::SharedPtr<MTL::ComputePipelineState> _pEquirectToCubePSO;
+    NS::SharedPtr<MTL::ComputePipelineState> _pLookupTablePSO;
+    NS::SharedPtr<MTL::ComputePipelineState> _pPrefilteringPSO;
+    
 public:
-  ImageBasedLightGenerator(MTL::Device *pDevice,
-                           MTL::CommandQueue *pCommandQueue);
-
-  // Singleton access pattern (Twin to Swift "defaultGenerator")
-  static ImageBasedLightGenerator *Default(MTL::Device *pDevice);
-
-  ImageBasedLight *makeLight(const std::string &path);
+    ImageBasedLightGenerator(MTL::Device *pDevice,
+                             MTL::CommandQueue *pCommandQueue);
+    
+    static ImageBasedLightGenerator *Default(MTL::Device *pDevice);
+    
+    ImageBasedLight *makeLight(const std::string &path);
 };

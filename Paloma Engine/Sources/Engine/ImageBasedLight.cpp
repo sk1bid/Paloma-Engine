@@ -10,37 +10,23 @@
 ImageBasedLight::ImageBasedLight(NS::SharedPtr<MTL::Texture> diffuseCubeTexture,
                                  NS::SharedPtr<MTL::Texture> specularCubeTexture, int specularMipLevelCount,
                                  NS::SharedPtr<MTL::Texture> scaleAndBiasLookupTexture,
-                                 NS::SharedPtr<MTL::Event> readyEvent) : diffuseCubeTexture(diffuseCubeTexture), specularCubeTexture(specularCubeTexture), specularMipLevelCount(specularMipLevelCount),scaleAndBiasLookupTexture(scaleAndBiasLookupTexture), readyEvent(readyEvent)
+                                 NS::SharedPtr<MTL::SharedEvent> readyEvent) : diffuseCubeTexture(diffuseCubeTexture), specularCubeTexture(specularCubeTexture), specularMipLevelCount(specularMipLevelCount),scaleAndBiasLookupTexture(scaleAndBiasLookupTexture), readyEvent(readyEvent)
 {}
 
 void ImageBasedLight::generateImageBasedLight(const std::string &url, MTL::Device *pDevice, std::function<void (ImageBasedLight *, NS::Error *)> completion)
 {
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        
-//        
-//        ImageBasedLightGenerator* pGenerator = ImageBasedLightGenerator::Default(pDevice);
-//        
-//        ImageBasedLight* pLight = pGenerator->makeLight(url);
-//        
-//        if (pLight) {
-//            completion(pLight, nullptr);
-//        } else {
-//            completion(nullptr, nullptr);
-//        }
-//    });
-//    
-    ImageBasedLightGenerator* pGenerator = ImageBasedLightGenerator::Default(pDevice);
-      
-      // makeLight делает тяжелую работу, но это безопасно для Main Thread при инициализации
-      ImageBasedLight* pLight = pGenerator->makeLight(url);
-      
-      if (pLight) {
-          // Вызываем callback сразу
-          completion(pLight, nullptr);
-      } else {
-          NS::Error* pError = NS::Error::error(NS::String::string("Failed to load IBL", NS::UTF8StringEncoding), 0, nullptr);
-          completion(nullptr, pError);
-      }
+    std::string urlCopy = url;
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        ImageBasedLightGenerator* pGenerator = ImageBasedLightGenerator::Default(pDevice);
+        ImageBasedLight* pLight = pGenerator->makeLight(urlCopy);
+        
+        if (pLight) {
+            completion(pLight, nullptr);
+        } else {
+            completion(nullptr, nullptr);
+        }
+    });
 }
 
 ImageBasedLightGenerator* ImageBasedLightGenerator::Default(MTL::Device* pDevice) {
@@ -48,7 +34,6 @@ ImageBasedLightGenerator* ImageBasedLightGenerator::Default(MTL::Device* pDevice
     static std::once_flag s_once;
     
     std::call_once(s_once, [pDevice](){
-        // Создаем отдельную очередь для генерации, чтобы не тормозить кадры
         MTL::CommandQueue* pQueue = pDevice->newCommandQueue();
         s_pGenerator = new ImageBasedLightGenerator(pDevice, pQueue);
         pQueue->release();
@@ -76,7 +61,6 @@ ImageBasedLightGenerator::ImageBasedLightGenerator(MTL::Device* pDevice, MTL::Co
 
 ImageBasedLight* ImageBasedLightGenerator::makeLight(const std::string &path) {
     using namespace MTL;
-    // 1. Loading Base Texture
     auto textureLoader = NS::TransferPtr(MTK::TextureLoader::alloc()->init(_pDevice.get()));
     
     auto srgbKey = MTK::TextureLoaderOptionSRGB;
@@ -85,11 +69,9 @@ ImageBasedLight* ImageBasedLightGenerator::makeLight(const std::string &path) {
     NS::Object* keys[] = { (NS::Object*)srgbKey, (NS::Object*)mipKey };
     NS::Object* values[] = { (NS::Object*)valFalse, (NS::Object*)valFalse };
     
-    // FIX: dictionary returns autoreleased object -> No TransferPtr
     NS::Dictionary* hdrOptions = NS::Dictionary::dictionary(values, keys, 2);
     
     NS::Error* error = nullptr;
-    // FIX: fileURLWithPath returns autoreleased -> No TransferPtr
     NS::URL* url = NS::URL::fileURLWithPath(NS::String::string(path.c_str(), NS::UTF8StringEncoding));
     
     auto equirectTexture = NS::TransferPtr(textureLoader->newTexture(url, hdrOptions, &error));
@@ -99,7 +81,6 @@ ImageBasedLight* ImageBasedLightGenerator::makeLight(const std::string &path) {
         return nullptr;
     }
     
-    // Параметры
     PixelFormat workingPixelFormat = PixelFormatRGBA16Float;
     NS::UInteger sourceHeight = equirectTexture->height();
     NS::UInteger sourceCubeSize = std::min((NS::UInteger)512, sourceHeight / 2);
@@ -110,8 +91,6 @@ ImageBasedLight* ImageBasedLightGenerator::makeLight(const std::string &path) {
     NS::UInteger diffuseSampleCount = 2048;
     NS::UInteger lutSampleCount = 512;
     
-    // 2. Texture Descriptors & Allocation
-    // FIX: factory methods return autoreleased -> No TransferPtr
     auto sourceCubeDescriptor = TextureDescriptor::textureCubeDescriptor(workingPixelFormat, sourceCubeSize, true);
     sourceCubeDescriptor->setUsage(TextureUsageShaderRead | TextureUsageShaderWrite);
     auto sourceCubeTexture = NS::TransferPtr(_pDevice->newTexture(sourceCubeDescriptor));
@@ -134,11 +113,8 @@ ImageBasedLight* ImageBasedLightGenerator::makeLight(const std::string &path) {
     lookupTextureDescriptor->setStorageMode(StorageModePrivate);
     auto lookupTexture = NS::TransferPtr(_pDevice->newTexture(lookupTextureDescriptor));
     lookupTexture->setLabel(NS::String::string("DFG Lookup Table (GGX)", NS::UTF8StringEncoding));
-    
-    // 3. Pass 1: Equirect -> Cube
-    // FIX: commandBuffer returns autoreleased -> No TransferPtr
+
     auto commandBuffer = _pCommandQueue->commandBuffer();
-    // FIX: computeCommandEncoder returns autoreleased -> No TransferPtr
     auto computeCommandEncoder = commandBuffer->computeCommandEncoder();
     
     computeCommandEncoder->setComputePipelineState(_pEquirectToCubePSO.get());
@@ -149,7 +125,6 @@ ImageBasedLight* ImageBasedLightGenerator::makeLight(const std::string &path) {
     computeCommandEncoder->endEncoding();
     commandBuffer->commit();
     
-    // 4. Mipmaps & All Other Computed Passes
     commandBuffer = _pCommandQueue->commandBuffer();
     
     auto mipmapCommandEncoder = commandBuffer->blitCommandEncoder();
@@ -170,7 +145,6 @@ ImageBasedLight* ImageBasedLightGenerator::makeLight(const std::string &path) {
     NS::UInteger levelSize = specularCubeSize;
     
     for (int mipLevel = 0; mipLevel < mipLevelCount; mipLevel++) {
-        // newTextureView starts with 'new' -> Retained -> TransferPtr OK
         auto levelView = NS::TransferPtr(specularCubeTexture->newTextureView(workingPixelFormat, TextureTypeCube, NS::Range(mipLevel, 1), NS::Range(0, 6)));
         
         PrefilteringParams params;
@@ -215,7 +189,7 @@ ImageBasedLight* ImageBasedLightGenerator::makeLight(const std::string &path) {
     computeCommandEncoder->endEncoding();
     
     // Finalize
-    auto readyEvent = NS::TransferPtr(_pDevice->newEvent());
+    auto readyEvent = NS::TransferPtr(_pDevice->newSharedEvent());
     commandBuffer->encodeSignalEvent(readyEvent.get(), 1);
     commandBuffer->commit();
     
