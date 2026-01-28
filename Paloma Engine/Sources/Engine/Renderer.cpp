@@ -138,7 +138,7 @@ void Metal4Renderer::makeResources() {
   auto *pBundle = NS::Bundle::mainBundle();
 
   auto *pScenePathNS = pBundle->pathForResource(
-      NS::String::string("toy_drummer", NS::UTF8StringEncoding),
+      NS::String::string("hummingbird_anim", NS::UTF8StringEncoding),
       NS::String::string("usdz", NS::UTF8StringEncoding));
 
   auto *pEnvPathNS = pBundle->pathForResource(
