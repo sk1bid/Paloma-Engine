@@ -8,8 +8,8 @@ A high-performance 3D game engine built using C++ and Apple's latest Metal 4 API
 
 Based on [metal-4-basics](https://github.com/metal-by-example/metal-4-basics) repo.
 
-![Demo](Docs/assets/demo-2.gif)
-![Example](Docs/assets/image.png)
+![Demo](demo-2.gif)
+![Example](image.png)
 
 ## Features
 
