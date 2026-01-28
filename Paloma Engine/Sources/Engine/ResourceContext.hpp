@@ -13,12 +13,12 @@ class ResourceContext {
 public:
   enum class TextureSemantic { Raw, Color };
 
-  // Храним ссылки на ресурсы, чтобы они не удалились из памяти
+  // Keep references to resources to prevent deallocation
   std::vector<NS::SharedPtr<MTL::Resource>> resources;
 
   ResourceContext(MTL::Device *pDevice);
 
-  // Методы конвертации (Twins of Swift)
+  // Conversion methods
   std::shared_ptr<Mesh> convert(MDL::Mesh *mdlMesh);
   Material convert(MDL::Material *mdlMaterial);
   NS::SharedPtr<MTL::Texture> convert(MDL::Texture *mdlTexture,
@@ -28,11 +28,10 @@ private:
   MTL::Device *_pDevice;
   NS::SharedPtr<MTK::TextureLoader> _pTextureLoader;
 
-  // Опции для загрузки текстур (словарь в Swift -> NSDictionary в ObjC/C++)
   NS::SharedPtr<NS::Dictionary> _dataTextureOptions;
   NS::SharedPtr<NS::Dictionary> _colorTextureOptions;
 
-  // Кэши (ObjectIdentifier в Swift -> указатель в C++)
+  // Caches
   std::map<MDL::Texture *, NS::SharedPtr<MTL::Texture>> _textureCache;
   std::map<MDL::Material *, Material> _materialCache;
 };
