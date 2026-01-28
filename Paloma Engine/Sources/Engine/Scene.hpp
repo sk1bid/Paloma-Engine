@@ -19,20 +19,23 @@ class Entity;
 class Scene {
 public:
 public:
-    static Scene *load(const std::string &path, MTL::Device *pDevice);
-    const std::vector<NS::SharedPtr<MTL::Resource>>& getResources() const { return resources; }
-    ImageBasedLight* getLightingEnvironment() const { return pLightingEnvironment; }
+  static Scene *load(const std::string &path, MTL::Device *pDevice);
+  const std::vector<NS::SharedPtr<MTL::Resource>> &getResources() const {
+    return resources;
+  }
+  ImageBasedLight *getLightingEnvironment() const {
+    return pLightingEnvironment;
+  }
+
 private:
-    friend class Metal4Renderer;
-    std::shared_ptr<Entity> rootEntity;
-    
-    std::vector<Light> lights;
-    
-    ImageBasedLight *pLightingEnvironment = nullptr;
-    
-    std::vector<NS::SharedPtr<MTL::Resource>> resources;
-    
-    
-    
-    Scene() = default;
+  friend class Metal4Renderer;
+  std::shared_ptr<Entity> rootEntity;
+
+  std::vector<Light> lights;
+
+  ImageBasedLight *pLightingEnvironment = nullptr;
+
+  std::vector<NS::SharedPtr<MTL::Resource>> resources;
+
+  Scene() = default;
 };
